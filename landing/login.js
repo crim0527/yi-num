@@ -91,7 +91,7 @@
     return !!(window.YiNumAuth && YiNumAuth.mode && YiNumAuth.mode() === 'firebase');
   }
 
-  /* 依据模式调整 UI（链接模式隐藏验证码输入框） */
+  /* 依据模式调整 UI（链接模式隐藏验证码输入框，主按钮改为“发送登录链接”） */
   function applyModeUI() {
     var link = isLinkMode();
     var field = codeRow ? codeRow.parentNode : null;
@@ -99,6 +99,8 @@
       field.hidden = link;
       field.style.display = link ? 'none' : '';
     }
+    var submitBtn = form ? form.querySelector('.auth-submit') : null;
+    if (submitBtn) submitBtn.textContent = link ? t('sendLink') : t('login');
     renderSendButton();
   }
 
@@ -211,6 +213,7 @@
     window.YiNumI18n.init(function () {
       renderMessages();
       renderSendButton();
+      applyModeUI();
     });
   }
 

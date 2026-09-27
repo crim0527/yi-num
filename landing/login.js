@@ -117,7 +117,9 @@
       startCountdown();
     }).catch(function () {
       sendBtn.disabled = false;
-      state.emailError = 'errSendFailed';
+      state.emailError = (err && err.message === 'AUTH_NOT_CONFIGURED')
+        ? 'errAuthNotConfigured'
+        : 'errSendFailed';
       renderMessages();
     });
   });
@@ -153,7 +155,10 @@
     YiNumAuth.verifyEmailCode(account, code.value.trim()).then(function () {
       window.location.href = 'destiny.html';
     }).catch(function (err) {
-      state.codeError = (err && err.message === 'CODE_INVALID') ? 'errCodeInvalid' : 'errSendFailed';
+      var m = err && err.message;
+      state.codeError = (m === 'AUTH_NOT_CONFIGURED') ? 'errAuthNotConfigured'
+        : (m === 'CODE_INVALID') ? 'errCodeInvalid'
+        : 'errSendFailed';
       renderMessages();
     });
   });
@@ -165,8 +170,17 @@
     var link = !!YiNumAuth.getCurrentUserSync();
     YiNumAuth.signInWithGoogle({ link: link }).then(function () {
       window.location.href = 'destiny.html';
-    }).catch(function () {
+    }).catch(function (err) {
       googleBtn.disabled = false;
+      var m = err && err.message;
+      if (m === 'AUTH_NOT_CONFIGURED') {
+        state.codeError = 'errAuthNotConfigured';
+        renderMessages();
+      } else if (m && String(m).indexOf('popup-closed') === -1) {
+        // 用户主动关闭弹窗不提示；其余错误给出通用提示
+        state.codeError = 'errGoogleFailed';
+        renderMessages();
+      }
     });
   });
 

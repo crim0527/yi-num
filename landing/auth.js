@@ -32,10 +32,17 @@
   var fbAuth = null, googleProvider = null;
   var listeners = [];
 
+  /* 安全兜底：开发模式（本地回显验证码）仅允许在本机调试；
+     线上若 Firebase 未就绪，禁止假登录，避免任何人可随意登录任意邮箱 */
+  var isLocal = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
+  var devAllowed = !enabled && isLocal;
+
   if (enabled) {
     console.info('[Yi-Num Auth] Firebase 模式');
+  } else if (devAllowed) {
+    console.info('[Yi-Num Auth] 开发模式（本机调试）');
   } else {
-    console.info('[Yi-Num Auth] 开发模式（未配置 Firebase 或 SDK 未加载）');
+    console.warn('[Yi-Num Auth] 登录服务未配置：线上环境已禁用开发模式');
   }
 
   function notify(user) {
@@ -106,7 +113,7 @@
 
   /* ---------------- 对外接口 ---------------- */
   window.YiNumAuth = {
-    mode: function () { return enabled ? 'firebase' : 'dev'; },
+    mode: function () { return enabled ? 'firebase' : (devAllowed ? 'dev' : 'unconfigured'); },
 
     onUserChanged: function (cb) { if (typeof cb === 'function') listeners.push(cb); },
 
@@ -131,12 +138,14 @@
           .then(function () { return undefined; })
           .catch(function (err) { return Promise.reject(err); });
       }
+      if (!devAllowed) return Promise.reject(new Error('AUTH_NOT_CONFIGURED'));
       return Promise.resolve(devGenCode(email));
     },
 
     /* 校验 6 位验证码（仅开发模式可用） */
     verifyEmailCode: function (email, code) {
       if (enabled) return Promise.reject(new Error('EMAIL_LINK_MODE'));
+      if (!devAllowed) return Promise.reject(new Error('AUTH_NOT_CONFIGURED'));
       if (!devCheckCode(email, code)) return Promise.reject(new Error('CODE_INVALID'));
       var user = {
         uid: 'email_' + b64(email),
@@ -175,6 +184,7 @@
           .then(function (res) { setSession(normalizeFb(res.user)); return res.user; });
       }
       /* 开发模式模拟 */
+      if (!devAllowed) return Promise.reject(new Error('AUTH_NOT_CONFIGURED'));
       var cur = readCache();
       var uid = (cur && opts.link) ? cur.uid : ('google_' + Math.random().toString(36).slice(2, 10));
       var user = {

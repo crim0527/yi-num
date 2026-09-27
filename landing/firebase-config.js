@@ -12,10 +12,10 @@
    本地生成 6 位验证码并回显到控制台 / 页面，便于无凭证联调。
    ========================================================= */
 window.YiNumFirebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyCIuuFeq-5YqV6iio4Hs9OKm5TPTuf27eY",
+  authDomain: "yi-num.firebaseapp.com",
+  projectId: "yi-num",
+  appId: "1:438169291288:web:1503c753296ec75892516d"
 };
 
 /* 配置仍为占位符 → 禁用 Firebase，使用开发模式 */

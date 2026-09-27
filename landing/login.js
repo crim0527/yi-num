@@ -172,6 +172,7 @@
       window.location.href = 'destiny.html';
     }).catch(function (err) {
       googleBtn.disabled = false;
+      try { console.error('[Yi-Num Auth] Google sign-in failed:', err && (err.code || err.message) || err); } catch (e) {}
       var m = err && err.message;
       if (m === 'AUTH_NOT_CONFIGURED') {
         state.codeError = 'errAuthNotConfigured';

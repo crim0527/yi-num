@@ -135,6 +135,7 @@
       startCountdown();
     }).catch(function (err) {
       sendBtn.disabled = false;
+      try { console.error('[Yi-Num Auth] send sign-in link failed:', err && (err.code || err.message) || err); } catch (e) {}
       var m = err && err.message;
       state.emailError = (m === 'AUTH_NOT_CONFIGURED') ? 'errAuthNotConfigured' : 'errSendFailed';
       renderMessages();

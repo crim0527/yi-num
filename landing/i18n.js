@@ -61,11 +61,13 @@ window.YiNumI18n = (function () {
       errCodeRequired: '请输入验证码',
       errCodeInvalid: '验证码为 6 位数字',
       errSendFailed: '发送失败，请稍后重试',
-      errLinkSent: '登录链接已发送至邮箱，请点击邮件中的链接完成登录',
+      errLinkSent: '登录链接已发送至邮箱，请点击邮件中的链接完成登录（未收到请检查垃圾邮件）',
       errAuthNotConfigured: '登录服务未配置，请联系管理员',
       errGoogleFailed: 'Google 登录失败，请稍后重试',
       devCodeHint: '（开发模式验证码：{code}）',
       sentTo: '验证码已发送至 ',
+      sentToLink: '登录链接已发送至 ',
+      sendLink: '发送登录链接',
       resendIn: '{s} 秒后重发',
 
       /* ---- 命数页 ---- */
@@ -296,11 +298,13 @@ window.YiNumI18n = (function () {
       errCodeRequired: 'Please enter the verification code',
       errCodeInvalid: 'The code must be 6 digits',
       errSendFailed: 'Failed to send. Please try again.',
-      errLinkSent: 'A sign-in link has been sent to your email. Open it to finish signing in.',
+      errLinkSent: 'A sign-in link has been sent to your email. Open it to finish signing in (check spam if missing).',
       errAuthNotConfigured: 'Sign-in service is not configured. Please contact the administrator.',
       errGoogleFailed: 'Google sign-in failed. Please try again.',
       devCodeHint: ' (Dev mode code: {code})',
       sentTo: 'Code sent to ',
+      sentToLink: 'Sign-in link sent to ',
+      sendLink: 'Send sign-in link',
       resendIn: 'Resend in {s}s',
 
       /* ---- 命数页 ---- */
@@ -531,11 +535,13 @@ window.YiNumI18n = (function () {
       errCodeRequired: 'Masukkan kode verifikasi',
       errCodeInvalid: 'Kode harus 6 digit',
       errSendFailed: 'Gagal mengirim. Coba lagi.',
-      errLinkSent: 'Tautan masuk telah dikirim ke email Anda. Buka untuk menyelesaikan.',
+      errLinkSent: 'Tautan masuk telah dikirim ke email Anda. Buka untuk menyelesaikan (cek folder spam).',
       errAuthNotConfigured: 'Layanan masuk belum dikonfigurasi. Silakan hubungi administrator.',
       errGoogleFailed: 'Login Google gagal. Silakan coba lagi.',
       devCodeHint: ' (Kode mode dev: {code})',
       sentTo: 'Kode dikirim ke ',
+      sentToLink: 'Tautan masuk dikirim ke ',
+      sendLink: 'Kirim tautan masuk',
       resendIn: 'Kirim ulang dalam {s}d',
 
       /* ---- 命数页 ---- */

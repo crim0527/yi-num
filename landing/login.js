@@ -59,7 +59,7 @@
     }
 
     if (state.sentTo) {
-      var txt = t('sentTo') + state.sentTo;
+      var txt = (isLinkMode() ? t('sentToLink') : t('sentTo')) + state.sentTo;
       if (state.devCode) txt += t('devCodeHint', { code: state.devCode });
       sentHint.textContent = txt;
       sentHint.hidden = false;
@@ -85,10 +85,27 @@
     return true;
   }
 
+  /* ---------------- 模式判断 ---------------- */
+  /* Firebase 邮件链接模式：没有 6 位验证码，发送的是「登录链接」邮件 */
+  function isLinkMode() {
+    return !!(window.YiNumAuth && YiNumAuth.mode && YiNumAuth.mode() === 'firebase');
+  }
+
+  /* 依据模式调整 UI（链接模式隐藏验证码输入框） */
+  function applyModeUI() {
+    var link = isLinkMode();
+    var field = codeRow ? codeRow.parentNode : null;
+    if (field && field.classList && field.classList.contains('field')) {
+      field.hidden = link;
+      field.style.display = link ? 'none' : '';
+    }
+    renderSendButton();
+  }
+
   /* ---------------- 验证码倒计时 ---------------- */
   function renderSendButton() {
     if (state.countdown > 0) sendBtn.textContent = t('resendIn', { s: state.countdown });
-    else sendBtn.textContent = t('sendCode');
+    else sendBtn.textContent = isLinkMode() ? t('sendLink') : t('sendCode');
   }
 
   function startCountdown() {
@@ -106,7 +123,8 @@
     }, 1000);
   }
 
-  sendBtn.addEventListener('click', function () {
+  /* 发送登录链接（Firebase 模式）/ 验证码（开发模式） */
+  function sendLoginLink() {
     if (!validateEmail()) { renderMessages(); email.focus(); return; }
     var addr = email.value.trim();
     sendBtn.disabled = true;
@@ -115,14 +133,15 @@
       state.devCode = devCode || null;
       renderMessages();
       startCountdown();
-    }).catch(function () {
+    }).catch(function (err) {
       sendBtn.disabled = false;
-      state.emailError = (err && err.message === 'AUTH_NOT_CONFIGURED')
-        ? 'errAuthNotConfigured'
-        : 'errSendFailed';
+      var m = err && err.message;
+      state.emailError = (m === 'AUTH_NOT_CONFIGURED') ? 'errAuthNotConfigured' : 'errSendFailed';
       renderMessages();
     });
-  });
+  }
+
+  sendBtn.addEventListener('click', function () { sendLoginLink(); });
 
   email.addEventListener('input', function () {
     if (state.emailError) { state.emailError = null; renderMessages(); }
@@ -137,20 +156,21 @@
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     var okEmail = validateEmail();
+    if (!okEmail) { renderMessages(); email.focus(); return; }
+
+    // Firebase 邮件链接模式：无需验证码，提交即发送登录链接
+    if (isLinkMode()) {
+      state.codeError = null;
+      state.emailError = null;
+      sendLoginLink();
+      return;
+    }
+
     var okCode = validateCode();
     renderMessages();
-
-    if (!okEmail) { email.focus(); return; }
     if (!okCode) { code.focus(); return; }
 
     var account = email.value.trim();
-
-    // Firebase 邮件链接模式：登录通过邮件链接完成，此处仅提示
-    if (YiNumAuth.mode() === 'firebase') {
-      state.codeError = 'errLinkSent';
-      renderMessages();
-      return;
-    }
 
     YiNumAuth.verifyEmailCode(account, code.value.trim()).then(function () {
       window.location.href = 'destiny.html';
@@ -196,6 +216,7 @@
   // 初始化认证客户端，并处理 Firebase 邮件链接登录回调
   if (window.YiNumAuth) {
     YiNumAuth.init();
+    applyModeUI();
     YiNumAuth.handleEmailLink(location.href).then(function (user) {
       if (user) window.location.href = 'destiny.html';
     }).catch(function () { /* 邮箱链接模式需先输入邮箱，忽略 */ });

@@ -1,0 +1,85 @@
+# ============================================================
+# Yi-Num 仓库忽略规则
+# 本工作区混入了其它项目的临时/构建产物，这里只放行 Yi-Num 站点，
+# 其余一律忽略，避免把大体积无关文件与密钥推到 GitHub。
+# ============================================================
+
+# ---- 仅提交的 Yi-Num 相关（如用 git add -A，下面的忽略项作为兜底）----
+# landing/  functions/  wrangler.toml  CODEBUDDY.md  rules/
+
+# ---- 其它项目 / 临时产物（忽略）----
+backend/
+frontend/
+cloudfunctions/
+miniprogram/
+codebuddy-plugin/
+scripts/
+_pkg_build/
+_pkg2/
+_pkg3/
+_pkg4/
+_tmp_*/
+assets/            # 根目录 assets（非 landing 站点资源）
+_diag.sh
+_pack_ps.ps1
+_repack.ps1
+_repack.py
+_serve.ps1
+_probe_sector.py
+_tmp_hello.txt
+_tmp_out.txt
+_tmp_read_xlsx.py
+argv_probe_out.txt
+build_err.txt
+build_log.txt
+docker-compose*.yml
+deploy.sh
+DEPLOY.md
+DEPLOYMENT_REPORT.md
+
+# ---- 通用 ----
+node_modules/
+.DS_Store
+*.zip
+*.log
+*.err
+
+# ---- 本地开发工具 / 密钥（不提交）----
+.tools/
+.env
+.env.*
+**/config.local.js
+
+# ---- 编辑器 / AI 工具 / 无关项目文件（不提交）----
+.agent/
+.claude/
+.clinerules/
+.codebuddy/
+.codex/
+.comate/
+.cursor/
+.gemini/
+.github/
+.iflow/
+.kiro/
+.lingma/
+.mcp.json
+.qoder/
+.qwen/
+.roo/
+.rules/
+.trae/
+.vscode/
+.windsurf/
+.workbuddy/
+backend_patch/
+IFLOW.md
+project.config.json
+project.private.config.json
+result_count.txt
+rules/
+setup.sh
+smart_review.html
+stock-workspace.tar.gz
+unsigned_list.json
+*.tar.gz

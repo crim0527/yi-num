@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title data-i18n="offeringTitle">每日供奉 · Yi-Num</title>
+<meta name="description" content="供奉 · Yi-Num 点香供灯，静心祈愿" />
+<meta name="theme-color" content="#0A0A0A" />
+<link rel="icon" type="image/png" href="assets/logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Ma+Shan+Zheng&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="app.css" />
+<link rel="stylesheet" href="offering.css" />
+<!-- 预加载神像图，避免轮播注入后才请求导致明显晚于其它元素出现 -->
+<link rel="preload" as="image" href="assets/deity-tianxiang.jpg" />
+<link rel="preload" as="image" href="assets/deity-wuqu.jpg" />
+<link rel="preload" as="image" href="assets/deity-hongluan.jpg" />
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<div class="app of-app" id="app">
+
+  <!-- ============ Header ============ -->
+  <header class="app-header of-header" id="siteHeader">
+    <button class="menu-btn" id="burger" type="button"
+            aria-label="打开菜单" aria-expanded="false" aria-controls="drawer"
+            data-i18n-aria="menuAria">
+      <span></span><span></span><span></span>
+    </button>
+
+    <h1 class="app-title of-title" data-i18n="offeringPageTitle">每日供奉</h1>
+
+    <div class="lang" id="lang">
+      <button class="lang-btn" id="langBtn" type="button"
+              aria-haspopup="listbox" aria-expanded="false" aria-controls="langMenu"
+              data-i18n-aria="langAria">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M3 12h18" />
+          <path d="M12 3c2.5 2.5 3.8 5.6 3.8 9s-1.3 6.5-3.8 9c-2.5-2.5-3.8-5.6-3.8-9S9.5 5.5 12 3z" />
+        </svg>
+        <span id="langCurrent">简体中文</span>
+        <svg class="lang-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M6 9l6 6 6-6" />
+        </svg>
+      </button>
+
+      <ul class="lang-menu" id="langMenu" role="listbox" aria-labelledby="langBtn" hidden>
+        <li role="none">
+          <button class="lang-opt" type="button" role="option" data-lang="zh-CN" aria-selected="true">
+            <span>简体中文</span>
+            <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M20 6L9 17l-5-5" />
+            </svg>
+          </button>
+        </li>
+        <li role="none">
+          <button class="lang-opt" type="button" role="option" data-lang="en" aria-selected="false">
+            <span>English</span>
+            <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M20 6L9 17l-5-5" />
+            </svg>
+          </button>
+        </li>
+        <li role="none">
+          <button class="lang-opt" type="button" role="option" data-lang="id" aria-selected="false">
+            <span>Bahasa Indonesia</span>
+            <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M20 6L9 17l-5-5" />
+            </svg>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </header>
+
+  <!-- ============ 主体 ============ -->
+  <main class="app-main of-main" id="ofMain">
+
+    <!-- ① 今日功德 + 香谱入口 -->
+    <div class="of-merit">
+      <span class="of-merit-label" data-i18n="offeringMerit">今日功德</span>
+      <span class="of-merit-num" id="ofMeritNum">0</span>
+      <button class="of-tool of-book-btn" id="ofBook" type="button"
+              aria-label="香谱" data-i18n-aria="offeringBook">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z" />
+          <path d="M9 8h7M9 12h7M9 16h4" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- ② 神像轮播（数据来自 offering.js 的 DEITIES 数组） -->
+    <section class="of-stage" aria-roledescription="carousel">
+      <button class="of-arrow of-arrow--prev" id="ofPrev" type="button"
+              aria-label="上一位" data-i18n-aria="offeringPrevAria">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M15 5l-7 7 7 7" />
+        </svg>
+      </button>
+
+      <div class="of-viewport" id="ofViewport">
+        <div class="of-track" id="ofTrack"></div>
+      </div>
+
+      <button class="of-arrow of-arrow--next" id="ofNext" type="button"
+              aria-label="下一位" data-i18n-aria="offeringNextAria">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+
+      <div class="of-caption">
+        <div class="of-caption-head">
+          <h2 class="of-deity-name" id="ofDeityName">红鸾星君</h2>
+          <span class="of-deity-tag" id="ofDeityTag">姻缘</span>
+        </div>
+        <p class="of-deity-intro" id="ofDeityIntro"></p>
+      </div>
+    </section>
+
+    <!-- ③ 供台：蜡烛 + 香炉 -->
+    <section class="of-altar">
+      <!-- 蜡烛（左）：图片本体 + 代码绘制火焰 -->
+      <div class="of-candle" id="ofCandleL">
+        <img class="of-candle-img" src="assets/candle.jpg" alt="" draggable="false">
+        <svg class="of-candle-fx" viewBox="0 0 339 1080" aria-hidden="true">
+          <g class="of-candle-flame">
+            <path class="of-flame-outer" d="M163 52c6 7.7 9.4 13.2 9.4 18.5 0 6.2-4.1 10.8-9.4 10.8s-9.4-4.6-9.4-10.8c0-5.3 3.4-10.8 9.4-18.5z" />
+            <path class="of-flame-inner" d="M163 63c2.8 3.6 4.4 6.1 4.4 8.6 0 2.9-1.9 5-4.4 5s-4.4-2.1-4.4-5c0-2.5 1.6-5 4.4-8.6z" />
+          </g>
+        </svg>
+      </div>
+
+      <!-- 香炉：图片本体 + 代码绘制的点燃效果（火焰 / 香烟） -->
+      <div class="of-censer" id="ofCenser">
+        <img class="of-censer-img" src="assets/censer.jpg" alt="" draggable="false">
+        <!-- 覆盖层：viewBox 底部 220×220 与图片重合，上方 40 单位留给香烟 -->
+        <svg class="of-censer-fx" viewBox="0 0 220 260" aria-hidden="true">
+          <!-- 香烟 -->
+          <g class="of-smoke" id="ofSmoke">
+            <path class="of-smoke-line" d="M110 60c-8-10 8-16 0-26s6-14 0-22" />
+            <path class="of-smoke-line" d="M92 66c-7-9 7-15 0-24s5-13 0-20" />
+            <path class="of-smoke-line" d="M128 66c-7-9 7-15 0-24s5-13 0-20" />
+          </g>
+
+          <!-- 三支香顶端的火星 + 火焰（香体本身在图片中） -->
+          <g class="of-sticks">
+            <g class="of-stick" data-i="0">
+              <circle class="of-stick-ember" cx="90" cy="68" r="2.6" />
+              <path class="of-stick-flame" d="M90 62c2.6 3.4 4 5.8 4 8 0 2.6-1.8 4.6-4 4.6s-4-2-4-4.6c0-2.2 1.4-4.6 4-8z" />
+            </g>
+            <g class="of-stick" data-i="1">
+              <circle class="of-stick-ember" cx="110" cy="64" r="2.6" />
+              <path class="of-stick-flame" d="M110 58c2.6 3.4 4 5.8 4 8 0 2.6-1.8 4.6-4 4.6s-4-2-4-4.6c0-2.2 1.4-4.6 4-8z" />
+            </g>
+            <g class="of-stick" data-i="2">
+              <circle class="of-stick-ember" cx="131" cy="70" r="2.6" />
+              <path class="of-stick-flame" d="M131 64c2.6 3.4 4 5.8 4 8 0 2.6-1.8 4.6-4 4.6s-4-2-4-4.6c0-2.2 1.4-4.6 4-8z" />
+            </g>
+          </g>
+        </svg>
+      </div>
+
+      <!-- 蜡烛（右）：图片本体 + 代码绘制火焰 -->
+      <div class="of-candle" id="ofCandleR">
+        <img class="of-candle-img" src="assets/candle.jpg" alt="" draggable="false">
+        <svg class="of-candle-fx" viewBox="0 0 339 1080" aria-hidden="true">
+          <g class="of-candle-flame">
+            <path class="of-flame-outer" d="M163 52c6 7.7 9.4 13.2 9.4 18.5 0 6.2-4.1 10.8-9.4 10.8s-9.4-4.6-9.4-10.8c0-5.3 3.4-10.8 9.4-18.5z" />
+            <path class="of-flame-inner" d="M163 63c2.8 3.6 4.4 6.1 4.4 8.6 0 2.9-1.9 5-4.4 5s-4.4-2.1-4.4-5c0-2.5 1.6-5 4.4-8.6z" />
+          </g>
+        </svg>
+      </div>
+    </section>
+
+    <!-- ④ 操作区 -->
+    <section class="of-actions">
+      <button class="of-btn of-btn--incense" id="ofIncenseBtn" type="button">
+        <span class="of-btn-label" data-i18n="offeringIncense">点香</span>
+        <span class="of-btn-sub" id="ofIncenseSub"></span>
+      </button>
+      <button class="of-btn of-btn--lamp" id="ofLampBtn" type="button">
+        <span class="of-btn-label" data-i18n="offeringLamp">点灯</span>
+        <span class="of-btn-sub" id="ofLampSub"></span>
+      </button>
+    </section>
+
+    <!-- 调试：仅 ?debug=1 时显示 -->
+    <div class="of-debug" id="ofDebug" hidden>
+      <button class="of-debug-btn" id="ofReset" type="button" data-i18n="offeringReset">重置供奉状态</button>
+    </div>
+  </main>
+
+  <!-- ============ 底部计时条 ============ -->
+  <div class="of-bar" id="ofBar" hidden>
+    <div class="of-timer">
+      <svg class="of-timer-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="13" r="8" />
+        <path d="M12 9v4l3 2" />
+        <path d="M9 2h6" />
+      </svg>
+      <span class="of-timer-num" id="ofTimer">00:00</span>
+      <em class="of-timer-tag" id="ofTimerTag"></em>
+    </div>
+    <button class="of-pause" id="ofPause" type="button">
+      <span id="ofPauseLabel" data-i18n="offeringPause">暂停</span>
+    </button>
+  </div>
+
+  <!-- ============ 点灯时长弹窗 ============ -->
+  <div class="of-scrim" id="ofScrim" hidden></div>
+
+  <div class="of-sheet" id="ofLampSheet" role="dialog" aria-modal="true"
+       aria-labelledby="ofLampSheetTitle" hidden>
+    <span class="of-sheet-handle" aria-hidden="true"></span>
+    <h3 class="of-sheet-title" id="ofLampSheetTitle" data-i18n="offeringLampTitle">选择点灯时长</h3>
+    <p class="of-sheet-sub" data-i18n="offeringLampHint">每 30 分钟消耗 1 张点灯券</p>
+
+    <div class="of-options" id="ofOptions"></div>
+
+    <div class="of-sheet-actions">
+      <button class="of-btn of-btn--ghost" id="ofLampCancel" type="button" data-i18n="offeringCancel">取消</button>
+      <button class="of-btn of-btn--primary" id="ofLampConfirm" type="button" data-i18n="offeringConfirm">确认</button>
+    </div>
+  </div>
+
+  <!-- ============ 香谱弹窗 ============ -->
+  <div class="of-sheet of-sheet--book" id="ofBookSheet" role="dialog" aria-modal="true"
+       aria-labelledby="ofBookSheetTitle" hidden>
+    <span class="of-sheet-handle" aria-hidden="true"></span>
+    <h3 class="of-sheet-title" id="ofBookSheetTitle" data-i18n="offeringBook">香谱</h3>
+    <p class="of-sheet-desc" data-i18n="offeringBookDesc">三炷香，敬天、敬地、敬人心；一炷一愿，心诚则灵。</p>
+    <div class="of-records" id="ofRecords"></div>
+    <div class="of-sheet-actions">
+      <button class="of-btn of-btn--ghost" id="ofBookClose" type="button" data-i18n="offeringClose">关闭</button>
+    </div>
+  </div>
+
+  <!-- ============ 抽屉菜单遮罩 + 抽屉（右侧滑出） ============ -->
+  <div class="scrim" id="scrim" hidden></div>
+
+  <aside class="drawer" id="drawer" hidden aria-label="菜单">
+    <div class="drawer-top">
+      <a class="drawer-brand" href="index.html">
+        <img class="drawer-brand-logo" src="assets/logo.png" alt="" width="30" height="30" />
+        <span class="drawer-brand-name">Yi-Num</span>
+      </a>
+      <button class="drawer-close" id="drawerClose" type="button"
+              aria-label="关闭菜单" data-i18n-aria="closeAria">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+             stroke-linecap="round" aria-hidden="true">
+          <path d="M6 6l12 12M18 6L6 18" />
+        </svg>
+      </button>
+    </div>
+
+    <nav class="drawer-nav" aria-label="主导航">
+      <a class="drawer-item" href="index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 11l8-6 8 6" />
+          <path d="M6 10v9h12v-9" />
+          <path d="M10 19v-5h4v5" />
+        </svg>
+        <span data-i18n="navHome">首页</span>
+      </a>
+      <a class="drawer-item" href="destiny.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M15.2 8.8l-2.1 4.6-4.3 2 2.1-4.6z" />
+        </svg>
+        <span data-i18n="navDestiny">命格数字</span>
+      </a>
+      <a class="drawer-item" href="lucky-open.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 7v5l3.5 2" />
+        </svg>
+        <span data-i18n="navLuckyTime">今日吉时</span>
+      </a>
+      <a class="drawer-item" href="ask.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 5h16v11H8l-4 4z" />
+        </svg>
+        <span data-i18n="navAsk">定制问事</span>
+      </a>
+      <a class="drawer-item" href="ziwei.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 3v18" />
+          <path d="M3 12h18" />
+          <path d="M5.6 5.6l12.8 12.8" />
+        </svg>
+        <span data-i18n="navZiwei">紫微斗数</span>
+      </a>
+      <a class="drawer-item is-active" href="offering.html" aria-current="page">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 4c1.5 1.7 2.4 3.4 2.4 5A2.4 2.4 0 0 1 12 11.4 2.4 2.4 0 0 1 9.6 9c0-1.6.9-3.3 2.4-5z" />
+          <path d="M5.5 13.5h13" />
+          <path d="M7.5 13.5v2.8A3.2 3.2 0 0 0 10.7 19.5h2.6a3.2 3.2 0 0 0 3.2-3.2v-2.8" />
+        </svg>
+        <span data-i18n="navOffering">每日供奉</span>
+      </a>
+      <a class="drawer-item" href="about.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 11v5" />
+          <path d="M12 7.5h.01" />
+        </svg>
+        <span data-i18n="navAbout">关于</span>
+      </a>
+    </nav>
+
+    <div class="drawer-foot">
+      <button class="drawer-add" id="addToHome" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 3v10m0 0l-4-4m4 4l4-4" />
+          <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" />
+        </svg>
+        <span data-i18n="drawerAdd">添加到桌面</span>
+      </button>
+      <a class="drawer-user" href="login.html">
+        <span class="drawer-avatar" aria-hidden="true">易</span>
+        <span class="drawer-user-meta">
+          <span class="drawer-user-name" data-i18n="guest">未登录</span>
+          <span class="drawer-user-sub" data-i18n="guestHint">点击登录</span>
+        </span>
+        <svg class="drawer-user-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M6 15l6-6 6 6" />
+        </svg>
+      </a>
+    </div>
+  </aside>
+
+</div>
+
+<script src="config.js"></script>
+<script src="i18n.js"></script>
+<script src="offering.js"></script>
+</body>
+</html>

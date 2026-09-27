@@ -1,0 +1,365 @@
+/* Yi-Num · 供奉 OfferingPage · 浅色系（暖白底 + 墨色 + 金点缀） */
+
+:root {
+  --of-bg: #FBF7EE;
+  --of-bg-2: #F3EAD9;
+  --of-paper: #FFFFFF;
+  --of-gold: #B8902E;
+  --of-gold-soft: #C9A96E;
+  --of-gold-dim: rgba(184, 144, 46, .4);
+  --of-ink: #2A261F;
+  --of-text: #4A4338;
+  --of-text-dim: #8A8068;
+  --of-font-cn: "Ma Shan Zheng", "Songti SC", "STSong", "SimSun", "Noto Serif SC", serif;
+}
+
+body { background: var(--of-bg); }
+
+.of-app {
+  background: #FFFFFF;
+  color: var(--of-ink);
+}
+
+/* 极淡的云纹 + 星点 */
+.of-main::before {
+  content: ""; position: absolute; inset: 0; z-index: 0;
+  pointer-events: none; opacity: .6;
+  background-image:
+    radial-gradient(1px 1px at 12% 18%, rgba(184, 144, 46, .35), transparent 60%),
+    radial-gradient(1px 1px at 78% 12%, rgba(184, 144, 46, .28), transparent 60%),
+    radial-gradient(1.4px 1.4px at 32% 62%, rgba(184, 144, 46, .22), transparent 60%),
+    radial-gradient(1px 1px at 88% 54%, rgba(184, 144, 46, .26), transparent 60%),
+    radial-gradient(1px 1px at 58% 34%, rgba(184, 144, 46, .2), transparent 60%);
+}
+.of-main::after {
+  content: ""; position: absolute; inset: 0; z-index: 0;
+  pointer-events: none; opacity: .06;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='80'%3E%3Cg fill='none' stroke='%23B8902E' stroke-width='1.2'%3E%3Cpath d='M8 56c10-14 26-14 36 0s26 14 36 0 26-14 36 0'/%3E%3Cpath d='M24 34c8-10 20-10 28 0'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 160px 80px;
+}
+
+/* ---------- Header ----------
+   与【今日吉时】头部保持一致：不再覆盖标题字体/字号、
+   汉堡图标与语言按钮的颜色，统一走 app.css / styles.css 默认样式 */
+.of-header {
+  background: #FFFFFF;
+  border-bottom-color: rgba(20, 20, 15, .1);
+}
+
+/* ---------- 主体 ---------- */
+.of-main {
+  flex-direction: column; align-items: stretch; justify-content: flex-start;
+  gap: 0; overflow-y: auto; -webkit-overflow-scrolling: touch;
+  padding: 0 20px calc(96px + env(safe-area-inset-bottom));
+}
+.of-main > * { position: relative; z-index: 1; }
+
+/* ---------- ① 今日功德 ---------- */
+.of-merit { position: relative; display: flex; align-items: baseline; justify-content: center; gap: .6rem; padding: 14px 0 4px; }
+.of-merit-label {
+  font-family: var(--font-sans); font-size: .92rem; letter-spacing: .22em;
+  text-indent: .22em; color: var(--of-text-dim);
+}
+/* 香谱入口：贴右侧，与「今日功德」标题水平居中对齐，并略下移 */
+.of-book-btn {
+  position: absolute; right: 0; top: calc(50% + 14px); transform: translateY(-50%);
+  width: 36px; height: 36px;
+}
+.of-merit-num {
+  font-family: var(--font-sans); font-size: 1.9rem; line-height: 1;
+  color: var(--of-gold); text-shadow: 0 0 16px rgba(184, 144, 46, .28);
+}
+
+/* ---------- ② 神像轮播 ---------- */
+.of-stage { position: relative; margin-top: 6px; }
+.of-viewport { overflow: hidden; border-radius: 20px; }
+.of-track { display: flex; transition: transform .5s var(--ease); will-change: transform; }
+.of-slide {
+  flex: 0 0 100%; min-width: 100%; display: flex; flex-direction: column;
+  align-items: center; padding: 4px 0 0;
+  opacity: .34; transform: scale(.94);
+  transition: opacity .45s var(--ease), transform .45s var(--ease);
+}
+.of-slide.is-current { opacity: 1; transform: scale(1); }
+.of-statue { width: min(62vw, 210px); height: auto; display: block; }
+.of-statue--img {
+  mix-blend-mode: multiply; user-select: none; -webkit-user-drag: none;
+  opacity: 0; animation: ofFadeIn .5s var(--ease) forwards;
+}
+@keyframes ofFadeIn { to { opacity: 1; } }
+.of-statue-aura { animation: ofAura 4.2s var(--ease) infinite; transform-origin: 100px 112px; }
+@keyframes ofAura { 0%, 100% { opacity: .5; transform: scale(1); } 50% { opacity: .82; transform: scale(1.05); } }
+
+.of-arrow {
+  position: absolute; top: 38%; z-index: 3;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 38px; height: 38px; border-radius: 50%;
+  color: var(--of-gold-soft);
+  background: rgba(255, 255, 255, .78);
+  border: 1px solid rgba(184, 144, 46, .28);
+  cursor: pointer; box-shadow: 0 6px 16px -10px rgba(184, 144, 46, .5);
+  transition: color .3s var(--ease), border-color .3s var(--ease), background .3s var(--ease);
+}
+.of-arrow svg { width: 18px; height: 18px; }
+.of-arrow:hover { color: var(--of-gold); border-color: rgba(184, 144, 46, .55); background: rgba(184, 144, 46, .12); }
+.of-arrow--prev { left: -2px; }
+.of-arrow--next { right: -2px; }
+.of-arrow.is-hidden { display: none; }
+
+.of-caption { text-align: center; margin-top: 10px; }
+.of-caption-head { display: flex; align-items: center; justify-content: center; gap: .6rem; }
+.of-deity-name {
+  margin: 0; font-family: var(--of-font-cn); font-size: 1.32rem; font-weight: 400;
+  letter-spacing: .2em; text-indent: .2em; color: var(--of-gold);
+}
+.of-deity-tag {
+  display: inline-block; margin-top: 0; padding: 2px 10px;
+  border: 1px solid rgba(184, 144, 46, .32); border-radius: 999px;
+  font-size: .7rem; letter-spacing: .2em; text-indent: .2em;
+  color: var(--of-gold-soft); background: rgba(184, 144, 46, .06);
+}
+.of-deity-intro {
+  margin: 10px auto 0; max-width: 20rem; font-size: .86rem; line-height: 1.9;
+  color: var(--of-text);
+}
+
+.of-dots { display: flex; justify-content: center; gap: 8px; margin-top: 14px; }
+.of-dot {
+  width: 6px; height: 6px; padding: 0; border: 0; border-radius: 50%;
+  background: rgba(184, 144, 46, .3); cursor: pointer;
+  transition: width .3s var(--ease), background .3s var(--ease);
+}
+.of-dot.is-active { width: 18px; border-radius: 3px; background: var(--of-gold); }
+
+/* ---------- ③ 供台：蜡烛 + 香炉 ---------- */
+.of-altar {
+  display: grid; grid-template-columns: 1.4fr 1.1fr 1.4fr; align-items: end;
+  gap: 4px; margin-top: 14px;
+}
+/* 蜡烛：图片本体（白底用 multiply 融入纸色背景） */
+.of-candle { position: relative; display: flex; justify-content: center; }
+.of-candle-img {
+  width: 100%; max-width: 40px; height: auto;
+  mix-blend-mode: multiply; user-select: none; pointer-events: none;
+}
+/* 火焰覆盖层：与图片等大对齐，火焰绘制在烛芯位置，保持静止 */
+.of-candle-fx {
+  position: absolute; left: 50%; bottom: 0; transform: translateX(-50%);
+  width: 100%; max-width: 40px; height: auto; aspect-ratio: 339 / 1080;
+  overflow: visible; pointer-events: none;
+}
+.of-candle-flame { opacity: 0; transition: opacity .6s var(--ease); }
+.of-flame-outer { fill: #F5A623; }
+.of-flame-inner { fill: #FFE9A8; }
+.of-candle.is-lit .of-candle-flame { opacity: 1; }
+
+/* 香炉：图片本体（白底用 multiply 融入纸色背景），固定宽度不受列宽影响 */
+.of-censer { position: relative; display: flex; justify-content: center; }
+.of-censer-img {
+  width: 190px; max-width: none; height: auto;
+  mix-blend-mode: multiply; user-select: none; pointer-events: none;
+}
+/* 点燃效果覆盖层：与图片底部对齐，上方多出的 40/260 用于香烟上升空间 */
+.of-censer-fx {
+  position: absolute; left: 50%; bottom: 0; transform: translateX(-50%);
+  width: 190px; max-width: none; height: auto; aspect-ratio: 220 / 260;
+  overflow: visible; pointer-events: none;
+}
+
+.of-stick-body  { fill: #8A6B3A; }
+.of-stick-ember { fill: #D4AF37; opacity: 0; transition: opacity .5s var(--ease); }
+.of-stick-flame { fill: #F5A623; opacity: 0; transform-origin: center bottom; transition: opacity .5s var(--ease); }
+.of-smoke { opacity: 0; transition: opacity .8s var(--ease); }
+.of-smoke-line { fill: none; stroke: rgba(74, 38, 31, .35); stroke-width: 2; stroke-linecap: round; }
+.of-censer.is-lit .of-stick-ember { opacity: 1; animation: ofEmber 2.4s ease-in-out infinite; }
+.of-censer.is-lit .of-stick-flame { opacity: 1; }
+.of-censer.is-lit .of-smoke { opacity: 1; }
+.of-censer.is-lit .of-smoke-line { animation: ofSmoke 4.4s linear infinite; }
+.of-censer.is-lit .of-smoke-line:nth-child(2) { animation-delay: 1.2s; }
+.of-censer.is-lit .of-smoke-line:nth-child(3) { animation-delay: 2.4s; }
+@keyframes ofEmber { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
+@keyframes ofSmoke {
+  0% { opacity: 0; transform: translateY(8px) translateX(0); }
+  20% { opacity: .5; }
+  60% { opacity: .35; transform: translateY(-16px) translateX(3px); }
+  100% { opacity: 0; transform: translateY(-34px) translateX(-3px); }
+}
+
+/* ---------- ④ 操作按钮 ---------- */
+.of-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 18px; }
+.of-btn {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 3px; min-height: 54px; padding: 10px 12px; border-radius: 14px;
+  font-family: inherit; font-weight: 500; color: var(--of-ink);
+  background: var(--of-paper); border: 1px solid rgba(184, 144, 46, .35);
+  cursor: pointer; transition: background .25s var(--ease), border-color .25s var(--ease);
+}
+.of-btn-label { font-size: .95rem; letter-spacing: .18em; text-indent: .18em; }
+.of-btn-sub { font-size: .74rem; color: var(--of-text-dim); }
+.of-btn:disabled { opacity: .55; cursor: default; }
+.of-btn--incense:hover:not(:disabled),
+.of-btn--lamp:hover:not(:disabled) { border-color: rgba(184, 144, 46, .7); background: rgba(184, 144, 46, .06); }
+.of-btn--ghost {
+  background: transparent; border-color: rgba(42, 38, 31, .18); color: var(--of-text);
+}
+.of-btn--ghost:hover { background: rgba(42, 38, 31, .04); }
+.of-btn--primary {
+  background: var(--of-gold); border-color: var(--of-gold); color: #FFFDF6;
+}
+.of-btn--primary:hover { background: #A67F24; }
+
+/* ---------- ⑤ 点灯券 ---------- */
+.of-tickets { text-align: center; margin: 12px 0 0; font-size: .82rem; color: var(--of-text-dim); }
+.of-tickets b { color: var(--of-gold); font-weight: 600; }
+.of-tickets-sep { opacity: .7; }
+
+/* ---------- ⑥ 侧边辅助工具 ---------- */
+.of-tools {
+  position: absolute; right: 14px; bottom: 120px; z-index: 20;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.of-tool {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 42px; height: 42px; border-radius: 50%; padding: 0;
+  color: var(--of-gold-soft); background: rgba(255, 255, 255, .85);
+  border: 1px solid rgba(184, 144, 46, .3); cursor: pointer;
+  box-shadow: 0 6px 16px -10px rgba(184, 144, 46, .5);
+  transition: color .3s var(--ease), border-color .3s var(--ease), background .3s var(--ease);
+}
+.of-tool svg { width: 20px; height: 20px; }
+.of-tool:hover { color: var(--of-gold); border-color: rgba(184, 144, 46, .55); background: rgba(184, 144, 46, .1); }
+.of-tool.is-on { color: #FFFDF6; background: var(--of-gold); border-color: var(--of-gold); }
+.of-tool.is-knock { animation: ofKnock .35s var(--ease); }
+@keyframes ofKnock {
+  0% { transform: scale(1); }
+  40% { transform: scale(.86) rotate(-6deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+/* ---------- 调试 ---------- */
+.of-debug { text-align: center; margin-top: 18px; }
+.of-debug-btn {
+  padding: 6px 10px; background: none; border: 0; cursor: pointer;
+  font-family: inherit; font-size: .76rem; letter-spacing: .1em;
+  color: var(--of-text-dim); text-decoration: underline;
+}
+
+/* ---------- 底部计时条 ---------- */
+.of-bar {
+  position: absolute; left: 16px; right: 16px;
+  bottom: calc(16px + env(safe-area-inset-bottom)); z-index: 40;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 10px 12px 10px 16px; border-radius: 16px;
+  background: rgba(255, 253, 246, .96); border: 1px solid rgba(184, 144, 46, .32);
+  box-shadow: 0 14px 34px -18px rgba(42, 38, 31, .45);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+}
+.of-bar[hidden] { display: none; }
+.of-timer { display: inline-flex; align-items: center; gap: 8px; min-width: 0; }
+.of-timer-ico { width: 18px; height: 18px; flex: none; color: var(--of-gold); }
+.of-timer-num {
+  font-variant-numeric: tabular-nums; font-weight: 600;
+  font-size: 1rem; color: var(--of-ink); white-space: nowrap;
+}
+.of-timer-tag {
+  font-style: normal; font-size: .76rem; letter-spacing: .08em;
+  color: var(--of-text-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.of-pause {
+  flex: none; padding: 8px 18px; border-radius: 999px; cursor: pointer;
+  font-family: inherit; font-size: .84rem; letter-spacing: .14em; text-indent: .14em;
+  color: var(--of-gold); background: transparent;
+  border: 1px solid rgba(184, 144, 46, .45);
+  transition: background .25s var(--ease), color .25s var(--ease);
+}
+.of-pause:hover { background: rgba(184, 144, 46, .1); }
+
+/* ---------- 遮罩 + 底部弹窗 ---------- */
+.of-scrim {
+  position: absolute; inset: 0; z-index: 50;
+  background: rgba(42, 38, 31, .42);
+  backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
+}
+.of-scrim[hidden] { display: none; }
+
+.of-sheet {
+  position: absolute; left: 50%; bottom: 0; z-index: 60;
+  width: min(100%, 520px);
+  padding: 14px 20px calc(20px + env(safe-area-inset-bottom));
+  background: var(--of-paper);
+  border: 1px solid rgba(184, 144, 46, .22); border-bottom: 0;
+  border-radius: 22px 22px 0 0;
+  box-shadow: 0 -18px 44px -24px rgba(42, 38, 31, .5);
+  transform: translate(-50%, 102%);
+  transition: transform .32s var(--ease);
+}
+.of-sheet[hidden] { display: none; }
+.of-sheet.is-open { transform: translate(-50%, 0); }
+.of-sheet--book { width: min(100%, 460px); }
+.of-sheet-handle {
+  display: block; width: 44px; height: 4px; margin: 0 auto 14px;
+  border-radius: 2px; background: rgba(184, 144, 46, .35);
+}
+.of-sheet-title {
+  margin: 0 0 6px; text-align: center;
+  font-family: var(--of-font-cn); font-weight: 400;
+  font-size: 1.12rem; letter-spacing: .16em; text-indent: .16em;
+  color: var(--of-ink);
+}
+.of-sheet-sub, .of-sheet-desc {
+  margin: 0 0 14px; text-align: center;
+  font-size: .8rem; line-height: 1.8; color: var(--of-text-dim);
+}
+
+/* 点灯时长选项 */
+.of-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.of-option {
+  padding: 12px 0; border-radius: 12px; cursor: pointer;
+  font-family: inherit; font-size: .9rem; color: var(--of-text);
+  background: var(--of-bg); border: 1px solid rgba(184, 144, 46, .28);
+  transition: background .25s var(--ease), border-color .25s var(--ease), color .25s var(--ease);
+}
+.of-option:hover { border-color: rgba(184, 144, 46, .55); }
+.of-option.is-active {
+  color: var(--of-gold); font-weight: 600;
+  background: rgba(184, 144, 46, .1); border-color: var(--of-gold);
+}
+
+/* 香谱记录 */
+.of-records {
+  display: flex; flex-direction: column; gap: 10px;
+  max-height: 46vh; overflow-y: auto; -webkit-overflow-scrolling: touch;
+}
+.of-record {
+  display: grid; grid-template-columns: auto 1fr auto;
+  align-items: baseline; gap: 2px 12px;
+  padding: 10px 12px; border-radius: 12px;
+  background: var(--of-bg);
+}
+.of-record-type { font-size: .86rem; color: var(--of-ink); }
+.of-record-meta { font-size: .74rem; color: var(--of-text-dim); text-align: right; }
+.of-record-merit { font-size: .86rem; font-weight: 600; color: var(--of-gold); text-align: right; }
+.of-records-empty { margin: 24px 0; text-align: center; font-size: .84rem; color: var(--of-text-dim); }
+
+/* ---------- 弹窗按钮组 ---------- */
+.of-sheet-actions { display: flex; gap: 12px; margin-top: 16px; }
+.of-sheet-actions .of-btn { flex: 1; min-height: 44px; }
+
+/* ---------- Toast ---------- */
+.yi-toast {
+  position: absolute; left: 50%; bottom: calc(96px + env(safe-area-inset-bottom)); z-index: 80;
+  transform: translateX(-50%) translateY(8px);
+  padding: 10px 20px; border-radius: 999px;
+  font-size: .84rem; letter-spacing: .06em; color: #FBF7EE;
+  background: rgba(42, 38, 31, .92);
+  opacity: 0; pointer-events: none;
+  transition: opacity .3s var(--ease), transform .3s var(--ease);
+}
+.yi-toast.is-show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ---------- PC 端：背景与【今日吉时】保持一致（白色画板 + 米灰外框） ---------- */
+@media (min-width: 520px) {
+  body { background: #E9E4D2; }
+  .of-app { background: #FFFFFF; }
+  .of-header { background: #FFFFFF; border-bottom-color: rgba(20, 20, 15, .1); }
+}

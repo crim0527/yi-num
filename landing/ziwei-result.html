@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title data-i18n="ziweiTitle">紫微斗数 · Yi-Num</title>
+<meta name="description" content="紫微斗数 · 每日运势推演" />
+<meta name="theme-color" content="#F3F1E5" />
+<link rel="icon" type="image/png" href="assets/logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Ma+Shan+Zheng&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="app.css" />
+<link rel="stylesheet" href="ziwei.css?v=20260920e" />
+<script src="user.js"></script>   <!-- 全局用户信息（与命格数字页共用出生信息） -->
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+<div class="halo" aria-hidden="true"></div>
+
+<div class="app" id="app">
+
+  <!-- ============ Header（复用现有结构） ============ -->
+  <header class="app-header" id="siteHeader">
+    <button class="menu-btn" id="burger" type="button"
+            aria-label="打开菜单" aria-expanded="false" aria-controls="drawer"
+            data-i18n-aria="menuAria">
+      <span></span><span></span><span></span>
+    </button>
+
+    <h1 class="app-title" data-i18n="navZiwei">紫微斗数</h1>
+
+    <div class="lang" id="lang">
+      <button class="lang-btn" id="langBtn" type="button"
+              aria-haspopup="listbox" aria-expanded="false" aria-controls="langMenu"
+              data-i18n-aria="langAria">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M3 12h18" />
+          <path d="M12 3c2.5 2.5 3.8 5.6 3.8 9s-1.3 6.5-3.8 9c-2.5-2.5-3.8-5.6-3.8-9S9.5 5.5 12 3z" />
+        </svg>
+        <span id="langCurrent">简体中文</span>
+        <svg class="lang-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M6 9l6 6 6-6" />
+        </svg>
+      </button>
+
+      <ul class="lang-menu" id="langMenu" role="listbox" aria-labelledby="langBtn" hidden>
+        <li role="none">
+          <button class="lang-opt" type="button" role="option" data-lang="zh-CN" aria-selected="true">
+            <span>简体中文</span>
+            <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M20 6L9 17l-5-5" />
+            </svg>
+          </button>
+        </li>
+        <li role="none">
+          <button class="lang-opt" type="button" role="option" data-lang="en" aria-selected="false">
+            <span>English</span>
+            <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M20 6L9 17l-5-5" />
+            </svg>
+          </button>
+        </li>
+        <li role="none">
+          <button class="lang-opt" type="button" role="option" data-lang="id" aria-selected="false">
+            <span>Bahasa Indonesia</span>
+            <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M20 6L9 17l-5-5" />
+            </svg>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </header>
+
+  <!-- ============ 主体：运势结果（不含发起算卦卡片） ============ -->
+  <main class="app-main">
+    <div class="zw" id="zw">
+
+      <div class="zw-results" id="zwResults" hidden>
+        <!-- 整体运势：深色卡 -->
+        <section class="zw-card zw-overall">
+          <h3 class="zw-card-title" data-i18n="ziweiOverall">整体运势</h3>
+          <p class="zw-card-text" id="zwOverallText"></p>
+        </section>
+
+        <!-- 事业 / 财运 / 感情 / 健康 -->
+        <div class="zw-grid">
+          <section class="zw-card zw-item">
+            <h3 class="zw-card-title" data-i18n="ziweiCareer">事业</h3>
+            <p class="zw-card-text" id="zwCareerText"></p>
+          </section>
+          <section class="zw-card zw-item is-gold">
+            <h3 class="zw-card-title" data-i18n="ziweiWealth">财运</h3>
+            <p class="zw-card-text" id="zwWealthText"></p>
+          </section>
+          <section class="zw-card zw-item">
+            <h3 class="zw-card-title" data-i18n="ziweiLove">感情</h3>
+            <p class="zw-card-text" id="zwLoveText"></p>
+          </section>
+          <section class="zw-card zw-item is-gold">
+            <h3 class="zw-card-title" data-i18n="ziweiHealth">健康</h3>
+            <p class="zw-card-text" id="zwHealthText"></p>
+          </section>
+        </div>
+
+        <!-- 幸运色 & 幸运数字 -->
+        <section class="zw-card zw-lucky">
+          <div class="zw-lucky-left">
+            <span class="zw-swatch" id="zwSwatch" aria-hidden="true"></span>
+            <span class="zw-color-name" id="zwColorName"></span>
+          </div>
+          <div class="zw-nums" id="zwNums" role="group" aria-label="幸运数字"></div>
+        </section>
+
+        <!-- 宜 & 忌 -->
+        <section class="zw-card zw-yiji">
+          <div class="zw-yi">
+            <h4 data-i18n="ziweiSuitable">宜</h4>
+            <ul class="zw-list" id="zwYiList"></ul>
+          </div>
+          <div class="zw-ji">
+            <h4 data-i18n="ziweiAvoid">忌</h4>
+            <ul class="zw-list" id="zwJiList"></ul>
+          </div>
+        </section>
+
+        <!-- 重新推演（弱化） -->
+        <div class="zw-footer">
+          <button class="zw-btn zw-btn-ghost" id="zwRedo" type="button" data-i18n="ziweiRedo">重新推演</button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ============ 加载层（紫色星盘，用于重新推演） ============ -->
+  <div class="zw-loading" id="zwLoading" hidden aria-live="polite">
+    <span class="zw-disc" aria-hidden="true"></span>
+    <p class="zw-loading-text" data-i18n="deriving">推演中…</p>
+  </div>
+
+  <!-- ============ 抽屉菜单（右侧滑出） ============ -->
+  <div class="scrim" id="scrim" hidden></div>
+  <aside class="drawer" id="drawer" hidden aria-label="菜单">
+    <div class="drawer-top">
+      <a class="drawer-brand" href="index.html">
+        <img class="drawer-brand-logo" src="assets/logo.png" alt="" width="30" height="30" />
+        <span class="drawer-brand-name">Yi-Num</span>
+      </a>
+      <button class="drawer-close" id="drawerClose" type="button"
+              aria-label="关闭菜单" data-i18n-aria="closeAria">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+             stroke-linecap="round" aria-hidden="true">
+          <path d="M6 6l12 12M18 6L6 18" />
+        </svg>
+      </button>
+    </div>
+
+    <nav class="drawer-nav" aria-label="主导航">
+      <a class="drawer-item" href="index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 11l8-6 8 6" />
+          <path d="M6 10v9h12v-9" />
+          <path d="M10 19v-5h4v5" />
+        </svg>
+        <span data-i18n="navHome">首页</span>
+      </a>
+      <a class="drawer-item" href="destiny.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M15.2 8.8l-2.1 4.6-4.3 2 2.1-4.6z" />
+        </svg>
+        <span data-i18n="navDestiny">命格数字</span>
+      </a>
+      <a class="drawer-item" href="lucky-open.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 7v5l3.5 2" />
+        </svg>
+        <span data-i18n="navLuckyTime">今日吉时</span>
+      </a>
+      <a class="drawer-item" href="ask.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 5h16v11H8l-4 4z" />
+        </svg>
+        <span data-i18n="navAsk">定制问事</span>
+      </a>
+      <a class="drawer-item is-active" href="ziwei.html" aria-current="page">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 3v18" />
+          <path d="M3 12h18" />
+          <path d="M5.6 5.6l12.8 12.8" />
+        </svg>
+        <span data-i18n="navZiwei">紫微斗数</span>
+      </a>
+      <a class="drawer-item" href="offering.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 4c1.5 1.7 2.4 3.4 2.4 5A2.4 2.4 0 0 1 12 11.4 2.4 2.4 0 0 1 9.6 9c0-1.6.9-3.3 2.4-5z" />
+          <path d="M5.5 13.5h13" />
+          <path d="M7.5 13.5v2.8A3.2 3.2 0 0 0 10.7 19.5h2.6a3.2 3.2 0 0 0 3.2-3.2v-2.8" />
+        </svg>
+        <span data-i18n="navOffering">供奉</span>
+      </a>
+      <a class="drawer-item" href="about.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 11v5" />
+          <path d="M12 7.5h.01" />
+        </svg>
+        <span data-i18n="navAbout">关于</span>
+      </a>
+    </nav>
+
+    <div class="drawer-foot">
+      <button class="drawer-add" id="addToHome" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 3v10m0 0l-4-4m4 4l4-4" />
+          <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" />
+        </svg>
+        <span data-i18n="drawerAdd">添加到桌面</span>
+      </button>
+      <a class="drawer-user" href="login.html">
+        <span class="drawer-avatar" aria-hidden="true">易</span>
+        <span class="drawer-user-meta">
+          <span class="drawer-user-name" data-i18n="guest">未登录</span>
+          <span class="drawer-user-sub" data-i18n="guestHint">点击登录</span>
+        </span>
+        <svg class="drawer-user-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M6 15l6-6 6 6" />
+        </svg>
+      </a>
+    </div>
+  </aside>
+
+</div>
+
+<script src="config.js"></script>
+<script src="i18n.js"></script>
+<script src="ziwei-api.js"></script>
+<script src="ziwei-result.js"></script>
+</body>
+</html>

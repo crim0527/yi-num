@@ -1,0 +1,206 @@
+/* =========================================================
+   Yi-Num · 问事页（AskPage）
+   内容容器宽度与命数页保持一致；卡片为古典卦象排版：
+   描边内框插画 + 竖排大字/卦辞小字 + 底部状态栏
+   ========================================================= */
+
+/* 卡片贴近顶部导航栏：内容区改为顶部对齐并收紧上留白（移动端 / PC 一致） */
+.app-main {
+  align-items: flex-start;
+  padding-top: 40px;
+  overflow-y: auto;              /* 矮屏时卡片可滚动查看，不被裁切 */
+}
+
+/* 内容容器：与命数页 .form-wrap 同宽（400px），移动端全宽、PC 端居中 */
+.ask-wrap {
+  width: 100%;
+  max-width: 400px;
+  margin-inline: auto;
+}
+
+/* ===== 长条形古典卦象卡片 ===== */
+.ask-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  container-type: inline-size;                    /* 卡片内字号按卡宽计量，避免宽屏溢出 */
+  aspect-ratio: 5 / 8;                            /* 高:宽 ≈ 1.6:1 竖向长条 */
+  background: linear-gradient(160deg, #fdfaf2 0%, #f7f1e2 55%, #f3ecda 100%);
+  border: 1px solid rgba(146, 84, 56, 0.40);      /* 红褐外框 */
+  border-radius: 16px;
+  box-shadow: 0 20px 50px -26px rgba(52, 38, 20, 0.45);
+  overflow: hidden;
+}
+/* 内层浅金细线（双层描边，参考传统卡片） */
+.ask-card::before {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  border: 1px solid rgba(212, 175, 55, 0.38);
+  border-radius: 11px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ① 顶部插画区（约 40%）：中式留白 + 红褐细线内框，预留插画位 */
+.ask-illus {
+  flex: 0 0 40%;
+  min-height: 0;
+  padding: 16px 16px 10px;
+}
+.ask-illus-frame {
+  height: 100%;
+  padding: 5px;
+  border: 1px solid rgba(146, 84, 56, 0.45);
+  border-radius: 4px;
+  background: #fffdf7;
+}
+.ask-illus-img {
+  height: 100%;
+  border-radius: 2px;
+  /* 底层：内联 SVG 中式远山（不依赖外部图片，保证插画区永不空白）；
+     上层：真实插画 jpg（若存在则覆盖显示，缺失时自动回退到远山） */
+  background:
+    url('assets/ask-illustration.jpg') center / cover no-repeat,
+    url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20400%20300'%3E%3Crect%20width='400'%20height='300'%20fill='%23f3ecda'/%3E%3Ccircle%20cx='305'%20cy='74'%20r='30'%20fill='%23d8be86'%20opacity='0.55'/%3E%3Cpath%20d='M0%20232%20L92%20150%20L165%20212%20L250%20118%20L340%20202%20L400%20162%20L400%20300%20L0%20300%20Z'%20fill='%23b7ab93'%20opacity='0.55'/%3E%3Cpath%20d='M0%20262%20L72%20212%20L150%20262%20L232%20202%20L322%20256%20L400%20222%20L400%20300%20L0%20300%20Z'%20fill='%238d8068'%20opacity='0.6'/%3E%3C/svg%3E") center / cover no-repeat,
+    linear-gradient(180deg, #f7f1e2 0%, #efe6d2 100%);
+}
+
+/* ② 中部核心文字区（约 40%）：竖排大字 + 卦辞小字，左右错落 */
+.ask-mid {
+  flex: 1 1 40%;
+  min-height: 0;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 20px;
+  padding: 14px 20px 14px;
+  overflow: hidden;                 /* 兜底：任何语种文字都不溢出卡片 */
+}
+/* 左：卦辞小字（竖排，超宽自动折成多列，如古籍排版） */
+.ask-note {
+  margin: 0;
+  writing-mode: vertical-rl;
+  font-family: "STSong", "Source Han Serif SC", "Songti SC", "SimSun", serif;
+  font-size: 13px;
+  line-height: 2;
+  letter-spacing: 0.18em;
+  color: #5a544a;
+  align-self: center;
+  max-height: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+/* 中：竖排大字（视觉焦点，墨黑） */
+.ask-bigs {
+  display: flex;
+  gap: 12px;
+  flex: none;
+  min-width: 0;
+}
+.ask-big {
+  writing-mode: vertical-rl;
+  font-family: "Kaiti SC", "STKaiti", "KaiTi", "STSong", "SimSun", serif;
+  /* 按卡片宽度（而非视口宽度）取字号：PC 端卡宽仅 360px，用 vw 会被顶到上限而溢出 */
+  font-size: clamp(26px, min(9vw, 36px), 42px);    /* 不支持容器查询时的回退 */
+  font-size: clamp(26px, 8.6cqw, 42px);
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  color: #1d1a15;
+  white-space: nowrap;                            /* 中文短句保持单列 */
+}
+.ask-big--low {
+  transform: translateY(12px);                    /* 左右两列错落（位移收窄，避免下缘被裁切） */
+}
+/* 拉丁语种：竖排拉丁字母过长，需换行 + 缩小字号，避免溢出卡片 */
+:lang(en) .ask-big,
+:lang(id) .ask-big {
+  white-space: normal;
+  font-size: clamp(18px, min(6vw, 24px), 26px);    /* 回退 */
+  font-size: clamp(18px, 5.8cqw, 26px);
+  letter-spacing: 0.14em;
+}
+:lang(en) .ask-note,
+:lang(id) .ask-note {
+  font-size: 12px;
+  line-height: 1.9;
+}
+/* 右：竖线 + 英文小字装饰 */
+.ask-deco {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  align-self: center;
+  flex: none;
+  max-height: 100%;
+  overflow: hidden;
+}
+.ask-deco-line {
+  width: 1px;
+  height: 56px;
+  background: linear-gradient(180deg, transparent, rgba(212, 175, 55, 0.8), transparent);
+}
+.ask-deco-en {
+  writing-mode: vertical-rl;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(154, 122, 48, 0.85);
+}
+
+/* ③ 底部状态栏（约 20%） */
+.ask-foot {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 20px 18px;
+}
+.ask-foot-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.ask-foot-trigram {
+  width: 18px;
+  height: 18px;
+  color: #9a7a30;                                 /* 极简八卦爻线（乾卦三横） */
+  flex: none;
+}
+.ask-foot-status {
+  font-family: "STSong", "Songti SC", "SimSun", serif;
+  font-size: 14px;
+  letter-spacing: 0.12em;
+  color: #3c362d;
+  white-space: nowrap;
+}
+/* “敬请期待”：金色小胶囊 */
+.ask-soon-pill {
+  flex: none;
+  font-family: "STSong", "Songti SC", "SimSun", serif;
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  color: #9a7a30;
+  border: 1px solid #D4AF37;
+  border-radius: 20px;
+  padding: 4px 12px;
+  background: rgba(212, 175, 55, 0.06);
+}
+
+/* 移动端：全宽，插画与文字随比例缩放 */
+@media (max-width: 480px) {
+  .ask-card { max-width: 100%; }
+  .app-main { padding-top: 28px; }
+  .ask-illus { padding: 14px 14px 8px; }
+  .ask-mid { gap: 14px; padding: 12px 16px 6px; }
+  .ask-note { font-size: 12px; }
+  .ask-big--low { transform: translateY(8px); }
+  .ask-deco-line { height: 44px; }
+  .ask-foot { padding: 8px 16px 16px; }
+}

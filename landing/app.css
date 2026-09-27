@@ -1,0 +1,344 @@
+/* =========================================================
+   Yi-Num · App 外壳
+   移动端：全屏，整页单一米白
+   PC 端：限宽 400px 居中，模拟手机比例
+   依赖 styles.css（设计令牌 / 语言切换 / 噪点光晕）
+   ========================================================= */
+
+/* ---------- 尺寸变量 ---------- */
+:root {
+  /* 导航栏高度：参考图实测 ≈ 屏宽 × 14%（400px 宽 → 56px），按屏高比例约 61px。
+     想与参考图 1:1 像素对齐（78px）时，只改这一处即可 */
+  --header-h: 60px;
+}
+
+/* ---------- 手机外框 ---------- 
+   移动端：铺满视口；PC 端（min-width: 520px）：收敛为 400px 手机画板 */
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #FFFFFF; /* 移动端：整页白色 */
+}
+
+.app {
+  position: relative;
+  width: 100%;
+  /* PC 端的画板宽度见下方 @media (min-width: 520px)；
+     移动端铺满视口，抽屉展开时左侧不会出现白/灰色边条 */
+  max-width: none;
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #FFFFFF;
+}
+
+/* 纯白底：隐藏首页那层暖色柔光，避免背景带色 */
+.halo { display: none; }
+
+/* PC：仅在此时加周边填充色 + 圆角阴影，形成手机外框。
+   内容页（命数 / 吉时 / 问事 / 详情页）在 PC 上不再随屏幕拉伸，
+   统一收敛为手机画板宽度（400px）居中，模拟真机比例 */
+@media (min-width: 520px) {
+  body {
+    padding: 22px;
+    background: #E9E4D2;
+  }
+  .app {
+    flex: none;
+    width: 400px;
+    max-width: 400px;
+    height: min(880px, 94vh);
+    border-radius: 32px;
+    box-shadow: 0 60px 100px -50px rgba(45, 36, 18, .55),
+                0 0 0 1px rgba(20, 20, 15, .07);
+  }
+}
+
+/* =========================================================
+   Header：汉堡 / 左对齐标题 / 语言切换 / 底部细分割线
+   ========================================================= */
+.app-header {
+  position: relative;
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  height: var(--header-h);
+  /* 外框已铺满视口：超宽屏时把头部内容收敛在 640px 内，窄屏等价于 0 10px */
+  padding: 0 max(10px, calc((100% - 640px) / 2));
+  background: #FFFFFF;
+  border-bottom: 1px solid rgba(20, 20, 15, .10);
+  z-index: 30;
+}
+
+/* 标题左对齐，紧跟汉堡菜单 */
+.app-title {
+  margin: 0;
+  font-size: 1.06rem;
+  font-weight: 500;
+  letter-spacing: .16em;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+/* ---------- 汉堡菜单 ---------- */
+.menu-btn {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.menu-btn span {
+  display: block;
+  width: 20px;
+  height: 1.5px;
+  background: var(--ink);
+  border-radius: 2px;
+  transition: transform .35s var(--ease), opacity .25s var(--ease), width .35s var(--ease);
+}
+.menu-btn span:nth-child(2) { width: 13px; }
+.menu-btn.is-open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.menu-btn.is-open span:nth-child(2) { opacity: 0; }
+.menu-btn.is-open span:nth-child(3) { width: 20px; transform: translateY(-6.5px) rotate(-45deg); }
+
+/* 语言切换靠右 */
+.app-header .lang { position: relative; z-index: 1; margin-left: auto; }
+
+/* =========================================================
+   主体
+   ========================================================= */
+.app-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.75rem 1.25rem calc(1.75rem + env(safe-area-inset-bottom));
+  overflow: hidden;
+}
+
+.stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.9rem;
+  width: 100%;
+}
+
+.stage-hint {
+  margin: 0;
+  font-size: .74rem;
+  letter-spacing: .26em;
+  text-indent: .26em;
+  color: var(--ink-mute);
+  text-align: center;
+  transition: opacity .5s var(--ease), transform .5s var(--ease);
+}
+.stage-hint.is-gone { opacity: 0; transform: translateY(6px); }
+
+/* =========================================================
+   抽屉菜单
+   ========================================================= */
+.scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  background: rgba(20, 20, 15, .34);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  animation: fadeIn .3s var(--ease) both;
+}
+.scrim[hidden] { display: none; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.drawer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 50;
+  width: 80%;
+  max-width: 316px;
+  display: flex;
+  flex-direction: column;
+  padding: 14px 14px calc(14px + env(safe-area-inset-bottom));
+  background: #F3F1EC;
+  box-shadow: 24px 0 60px -40px rgba(20, 20, 15, .5);
+  overflow-y: auto;
+  animation: drawerIn .36s var(--ease) both;
+}
+.drawer[hidden] { display: none; }
+@keyframes drawerIn { from { transform: translateX(-100%); } to { transform: none; } }
+
+/* ---------- 顶部：品牌 + 关闭 ---------- */
+.drawer-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 6px 16px;
+}
+.drawer-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  text-decoration: none;
+}
+.drawer-brand-logo {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.drawer-brand-name {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: .14em;
+  color: var(--ink);
+}
+.drawer-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  color: var(--ink);
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.drawer-close svg { width: 20px; height: 20px; }
+
+/* ---------- 导航卡片 ---------- */
+.drawer-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.drawer-item {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  padding: 15px 16px;
+  background: transparent;
+  border-radius: 16px;
+  font-size: .98rem;
+  color: var(--ink);
+  text-decoration: none;
+  transition: transform .2s var(--ease);
+}
+.drawer-item svg {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  opacity: .85;
+}
+.drawer-item:active { transform: scale(.98); }
+/* 仅当前页：白色底色作为选中指示（不加选中框） */
+.drawer-item.is-active {
+  background: #FFFFFF;
+}
+
+/* ---------- 底部：添加到桌面 + 用户 ---------- */
+.drawer-foot {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-top: 16px;
+}
+.drawer-add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .6rem;
+  width: 100%;
+  padding: 14px;
+  background: #FFFFFF;
+  border: 0;
+  border-radius: 16px;
+  box-shadow: 0 1px 2px rgba(20, 20, 15, .04);
+  font-size: .95rem;
+  color: var(--ink);
+  cursor: pointer;
+  transition: transform .2s var(--ease);
+}
+.drawer-add svg { width: 18px; height: 18px; opacity: .85; }
+.drawer-add:active { transform: scale(.98); }
+
+.drawer-user {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  padding: 2px 6px 0;
+  color: var(--ink);
+  text-decoration: none;
+}
+.drawer-avatar {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #9E2F28;
+  color: #F7EBD4;
+  font-size: .95rem;
+}
+.drawer-user-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.drawer-user-name { font-size: .92rem; font-weight: 500; }
+.drawer-user-sub { font-size: .74rem; color: var(--ink-mute); }
+.drawer-user-caret {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin-left: auto;
+  color: var(--ink-mute);
+}
+
+/* ---------- Toast 轻提示（推演失败 / 示例数据等） ---------- */
+.yi-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 84px;
+  z-index: 200;
+  max-width: 78vw;
+  padding: 11px 20px;
+  border-radius: 999px;
+  background: rgba(28, 24, 18, .92);
+  color: #F7F1E4;
+  font-size: .86rem;
+  line-height: 1.5;
+  letter-spacing: .02em;
+  text-align: center;
+  box-shadow: 0 14px 34px -14px rgba(20, 16, 10, .6);
+  opacity: 0;
+  transform: translate(-50%, 12px);
+  pointer-events: none;
+  transition: opacity .24s ease, transform .24s ease;
+}
+.yi-toast.is-show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}

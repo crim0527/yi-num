@@ -1,0 +1,378 @@
+/* =========================================================
+   Yi-Num · 吉时（LuckyTime）日期筛选器
+   中式极简 · 宣纸水墨日历感：年月在上，日期在下
+   仅靠间距与字号分层级，除点睛红点外不出现鲜艳色
+   ========================================================= */
+
+/* ---------- 顶部留白：卡片与导航栏的距离 PC 40px / 移动端 28px ---------- */
+.app-main {
+  align-items: stretch;         /* .ltp 纵向撑满主体区域 */
+  padding-top: 0;
+  overflow-y: auto;             /* 内容变长后可滚动 */
+}
+
+.ltp {
+  flex: 1;                      /* 撑满 .app-main 剩余高度 */
+  display: flex;
+  flex-direction: column;
+  max-width: 400px;             /* PC 端限制最大宽度，居中 */
+  width: 100%;
+  margin: 0 auto;
+  padding: 40px 16px 118px;     /* 下：容纳圆圈下方红点与「9月」标签 */
+  box-sizing: border-box;
+  position: relative;           /* 作为桌面端弹窗的定位上下文（仿手机框） */
+}
+
+/* ---------- 吉时信息卡片 ----------
+   左上时辰书法字 + 小印章；红点竖线时间线：吉时/凶时 + 批语 */
+.ltp-card {
+  position: relative;
+  width: 100%;
+  max-width: 320px;               /* 恢复主卡片宽度（两侧装饰卡片已移除） */
+  flex: 1;                        /* 撑满页面中间区域，日期区贴近底部 */
+  min-height: 480px;
+  margin: 0 auto 48px;             /* 卡片与日期区间距加大 */
+  padding: 20px 26px 34px;         /* 顶边距留小幅间距，占位图不贴卡片顶部 */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;    /* 内容顶对齐，图片与时间线仅留 gap 间距 */
+  gap: 20px;
+  background: #FDFBF7;                       /* 浅米白（非纯白） */
+  cursor: pointer;                            /* 点击卡片弹出完整批语 */
+  border: 1px solid rgba(20, 20, 15, .07);   /* 极细浅灰边框 */
+  border-radius: 20px;
+  box-shadow: 0 10px 28px -22px rgba(52, 38, 20, .45);   /* 轻微投影，无装饰底纹 */
+  overflow: hidden;                                        /* 保持圆角裁剪主视觉图 */
+  transition: box-shadow .25s ease, transform .25s ease;   /* 点击/悬停反馈 */
+}
+/* 悬停轻抬：仅指针设备生效，移动端不触发 */
+@media (hover: hover) {
+  .ltp-card:hover {
+    box-shadow: 0 16px 34px -22px rgba(52, 38, 20, .5);
+    transform: translateY(-2px);
+  }
+}
+
+/* 主视觉图：4:3 固定比例，宽度自适应；替换图片仅需改 --ltp-img */
+.ltp-figure {
+  --ltp-img: url("assets/lucky-hero.jpg");   /* 水墨主视觉（太极 · 竹 · 远山） */
+  margin: 0;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  flex: none;
+  border-radius: 12px;
+  background-color: #F2EEE3;                 /* 极浅米色兜底 */
+  background-image: var(--ltp-img, none);    /* 覆盖时可用 style="--ltp-img:url(...)" */
+  background-size: cover;                    /* 等效 object-fit: cover */
+  background-position: center;
+}
+
+/* ---------- 时间线：红点 + 竖线 + 标题 + 批语 ---------- */
+.ltp-timeline {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;                     /* 与卡片 gap 统一：图片→吉时、吉时→凶时间距一致 */
+  padding-left: 22px;             /* 红点与竖线占位 */
+}
+.ltp-item { position: relative; }   /* 时间线条目 */
+.ltp-item:not(:last-child)::after {  /* 连接竖线：上一圆点中心 → 下一圆点中心 */
+  content: "";
+  position: absolute;
+  left: -18.5px;                  /* 圆点中心（-22px + 8px/2） */
+  top: 4px;                       /* 本圆点中心 */
+  bottom: -28px;                  /* 间距 20px + 下一圆点中心 8px */
+  width: 1px;
+  background: rgba(20, 20, 15, .12);
+}
+.ltp-item:last-child::after {      /* 末条目：竖线自圆点向下延伸至批语底部 */
+  content: "";
+  position: absolute;
+  left: -18.5px;
+  top: 4px;
+  bottom: 0;
+  width: 1px;
+  background: rgba(20, 20, 15, .12);
+}
+.ltp-dot {                        /* 朱红圆点：与标题行垂直居中 */
+  position: absolute;
+  left: -22px;
+  top: 4px;                       /* 标题 16px 行高的视觉中心 */
+  z-index: 1;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #D3402C;
+}
+.ltp-item-title {
+  margin: 0 0 8px;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-family: "Songti SC", "STSong", "SimSun", "Noto Serif SC", serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  color: #14110d;
+  line-height: 1;
+}
+.ltp-item-time {                  /* 时间段 */
+  font-family: "Songti SC", "STSong", "SimSun", "Noto Serif SC", serif;
+  font-size: 14px;
+  line-height: 1;                 /* 与标题同高，避免撑高行盒导致红点偏移 */
+  font-weight: 400;
+  letter-spacing: 1px;
+  color: #555;
+}
+.ltp-item-text {                  /* 批语正文：默认完整展示 */
+  margin: 0;
+  font-family: "Songti SC", "STSong", "SimSun", "Noto Serif SC", serif;
+  font-size: 13px;
+  line-height: 1.9;
+  letter-spacing: .05em;
+  color: #8a8378;
+}
+.ltp-item-text.is-clamped {       /* 内容溢出卡片时，限 4 行并隐藏溢出，点击卡片查看全部 */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  overflow: hidden;
+}
+
+/* ---------- 日期区 ---------- */
+.ltp-dates {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;                   /* 中心日期与两侧保持大间距 */
+  width: 100%;
+  margin-top: auto;               /* 推向页面底部 */
+}
+
+/* 两侧日期：弱化处理（无圆圈、无红点指示器），随离中心距离渐浅 */
+.ltp-date {
+  appearance: none;
+  -webkit-appearance: none;
+  background: none;
+  border: 0;
+  padding: 8px 0;
+  margin: 0;
+  cursor: pointer;
+  font-family: "Songti SC", "STSong", "SimSun", "Noto Serif SC", serif;
+  font-size: 20px;
+  letter-spacing: 2px;
+  color: #ddd8cc;              /* 最远（隔一天）：最浅 */
+  transition: color .3s ease, transform .3s ease;
+  line-height: 1;
+}
+.ltp-date.is-adj { color: #b5afa3; }   /* 紧邻中心：中浅灰 */
+.ltp-date:hover { color: #8a847a; }
+.ltp-date:focus-visible { outline: none; color: #8a847a; }
+
+/* 处于中心位置的日期：自身文字隐藏，由圆圈内的数字代替 */
+.ltp-date.is-center .ltp-date-text { visibility: hidden; }
+
+/* ---------- 移动中的选中指示器：圆圈 + 红点 + 竖排小字 ---------- */
+.ltp-indicator {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 76px;
+  height: 76px;
+  transform: translate(-50%, -50%);   /* 基准：水平由 JS 叠加 translateX */
+  transition: transform .3s ease;      /* 平滑跟随移动 */
+  pointer-events: none;                /* 点击穿透到下方日期按钮 */
+  z-index: 2;
+}
+
+/* 圆圈：白底、极细灰描边、轻微阴影，尺寸略大于两侧日期 */
+.ltp-circle {
+  position: relative;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid #E0E0E0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, .06);
+  display: flex;                       /* 保证日期居中在圆圈内 */
+  align-items: center;
+  justify-content: center;
+}
+
+/* 圆圈下缘约 1/3 的红色圆弧（叠在圆圈内沿，点睛之笔） */
+.ltp-arc {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* 圆圈内的日期文字：颜色加深（墨黑）、字号放大 */
+.ltp-num {
+  font-family: "Songti SC", "STSong", "SimSun", "Noto Serif SC", serif;
+  font-size: 30px;
+  letter-spacing: 3px;
+  color: #14110d;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* 日期圆圈正下方居中红点（点睛之笔） */
+.ltp-date-dot {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 9px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #D32F2F;
+}
+
+/* 红点下方月份小字（横向，如「9月」） */
+.ltp-label {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 22px;
+  white-space: nowrap;                    /* 横向不换行，如「9月」 */
+  font-family: "Songti SC", "STSong", "SimSun", "Noto Serif SC", serif;
+  font-size: 20px;
+  letter-spacing: 2px;
+  color: #b7b1a6;
+}
+
+/* ---------- 批语底部弹窗（Bottom Sheet） ---------- */
+.ltp-sheet-scrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 16, 8, .35);
+  opacity: 0;
+  transition: opacity .28s ease;
+  z-index: 60;
+}
+.ltp-sheet-scrim.is-open { opacity: 1; }
+
+.ltp-sheet {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  transform: translate(-50%, 100%);
+  width: 100%;
+  max-width: 400px;
+  box-sizing: border-box;
+  background: #FDFBF7;                       /* 与卡片一致浅米白 */
+  border-radius: 20px 20px 0 0;
+  box-shadow: 0 -20px 50px -20px rgba(45, 36, 18, .4);
+  padding: 14px 24px calc(24px + env(safe-area-inset-bottom, 0));
+  text-align: center;
+  z-index: 61;
+  transition: transform .3s cubic-bezier(.22, .61, .36, 1);
+}
+.ltp-sheet.is-open { transform: translate(-50%, 0); }
+
+.ltp-sheet-handle {
+  display: block;
+  width: 40px;
+  height: 4px;
+  margin: 0 auto 14px;
+  border-radius: 2px;
+  background: rgba(20, 20, 15, .12);
+}
+.ltp-sheet-title {
+  margin: 0 0 12px;
+  font-family: "Songti SC", "STSong", "SimSun", "Noto Serif SC", serif;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  color: #14110d;
+}
+.ltp-sheet-block + .ltp-sheet-block { margin-top: 22px; }
+.ltp-sheet-block-title {
+  margin: 0 0 8px;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-family: "Songti SC", "STSong", "SimSun", "Noto Serif SC", serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  color: #14110d;
+}
+.ltp-sheet-block-title .ltp-sheet-time {
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 1px;
+  color: #555;
+}
+.ltp-sheet-block-text {
+  margin: 0;
+  font-family: "Songti SC", "STSong", "SimSun", "Noto Serif SC", serif;
+  font-size: 14px;
+  line-height: 1.9;
+  letter-spacing: .05em;
+  color: #6f685c;
+  text-align: left;
+}
+/* ---------- 推演加载层（太极旋转） ---------- */
+.ltp-loading {
+  position: absolute;
+  top: var(--header-h, 60px);          /* 与开启页一致：不遮挡导航栏 */
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 140;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  background: rgba(255, 255, 255, .86);
+}
+.ltp-loading[hidden] { display: none; }
+.ltp-taiji {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  animation: ltpSpin 1.1s linear infinite;
+}
+@keyframes ltpSpin { to { transform: rotate(360deg); } }
+.ltp-loading-text {
+  margin: 0;
+  font-size: .88rem;
+  letter-spacing: .16em;
+  color: var(--ink-mute, #6f685c);
+}
+@media (prefers-reduced-motion: reduce) {
+  .ltp-taiji { animation-duration: 2.4s; }
+}
+
+/* ---------- 桌面端：弹窗从仿手机框（.ltp）底部向上弹出，而非视口底部 ---------- */
+@media (min-width: 481px) {
+  .ltp-sheet {
+    position: absolute;          /* 相对 .ltp 框定位 */
+    bottom: 0;                   /* 锚定到框底部，向上滑出 */
+    left: 50%;
+    transform: translate(-50%, 100%);
+    border-radius: 20px;         /* 桌面端四角圆润，更像框内浮层 */
+  }
+  .ltp-sheet.is-open { transform: translate(-50%, 0); }
+}
+/* ---------- 移动端：全宽、字号自适应 ---------- */
+@media (max-width: 480px) {
+  .ltp { padding: 28px 12px 225px; }
+  .ltp-card { max-width: 340px; margin: 0 auto 64px; padding: 20px 24px 34px; }
+  .ltp-timeline { gap: 20px; }
+  .ltp-item:not(:last-child)::after { bottom: -28px; }   /* 间距 20px + 下一圆点中心 8px */
+  .ltp-dates { gap: 40px; }
+  .ltp-date { font-size: 18px; }
+  .ltp-circle,
+  .ltp-indicator { width: 66px; height: 66px; }
+  .ltp-num { font-size: 27px; letter-spacing: 2px; }
+}

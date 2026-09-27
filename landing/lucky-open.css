@@ -1,0 +1,165 @@
+/* =========================================================
+   Yi-Num · 吉时「每日开启页」
+   每日首次进入吉时时的仪式感入口，覆盖在详情页之上
+   中式极简：宣纸米白 + 深墨按钮 + 底部国风暗纹
+   ========================================================= */
+
+/* ---------- 页面容器：占满导航栏下方的内容区（整页即开启页，非遮罩） ---------- */
+.lucky-open {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;                       /* 移动端左右留 20px */
+  box-sizing: border-box;
+  opacity: 1;
+  transition: opacity .4s ease;        /* 淡出过渡到详情页 */
+}
+.lucky-open.is-leaving { opacity: 0; }
+
+/* ---------- 卡片容器：竖向长条，居中，PC 最大 400px ---------- */
+.lucky-open-card {
+  position: relative;                   /* 作为底部暗纹 ::after 的定位上下文 */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;       /* 各区块均匀分布 */
+  gap: 26px;                            /* 撤销：回到上一版间距 */
+  width: 100%;
+  max-width: 400px;
+  min-height: 90%;                     /* 撤销：回到上一版高度 */
+  padding: 26px 24px 30px;
+  box-sizing: border-box;
+  background: #FDFBF7;
+  border: 1px solid rgba(20, 20, 15, .06);
+  border-radius: 20px;
+  box-shadow: 0 24px 60px -28px rgba(52, 38, 20, .45);
+  overflow: hidden;
+  /* 进入动画：底部上浮 20px + 淡入 */
+  opacity: 0;
+  transform: translateY(20px);
+}
+.lucky-open-card.is-in {
+  opacity: 1;
+  transform: none;
+  transition: opacity .5s ease, transform .5s ease;
+}
+/* 内容压在暗纹之上（relative 不产生位移） */
+.lucky-open-card > * { position: relative; z-index: 1; }
+
+/* ---------- 古风插画：4:3，位于日期下方，略收窄以突出日期 ---------- */
+.lucky-open-figure {
+  --open-img: url("assets/lucky-open.jpg");   /* ← 替换为晨曦/远山/云纹插画即可 */
+  margin: 0 auto;                      /* 居中 */
+  width: 88%;                          /* 撤销：回到上一版插画宽度 */
+  aspect-ratio: 4 / 3;                 /* 不固定高度 */
+  flex: none;
+  border-radius: 12px;
+  background-color: #F2EEE3;           /* 极浅米色兜底 */
+  background-image: var(--open-img, none);
+  background-size: cover;              /* 等效 object-fit: cover */
+  background-position: center;
+}
+
+/* ---------- 顶部日期区（视觉重心，位于插画上方） ---------- */
+.lucky-open-dateblock { text-align: center; }
+.lucky-open-year {                     /* 年份与农历小字 */
+  margin: 0 0 14px;
+  font-size: 13px;
+  letter-spacing: .3em;
+  color: #999;
+}
+.lucky-open-date {                     /* 核心日期大字 */
+  margin: 0;
+  /* 统一衬线字体：保证 9 与 20 的数字形态一致、优雅 */
+  font-family: 'Times New Roman', 'Songti SC', 'SimSun', serif;
+  font-size: 52px;
+  font-weight: 700;
+  letter-spacing: 2px;                 /* 数字更有呼吸感 */
+  line-height: 1.1;
+  color: #14110d;
+}
+.lucky-open-date .d-num {              /* 数字：与父级同字号 */
+  font-size: 1em;
+  font-weight: 700;
+}
+.lucky-open-date .d-unit {             /* 「月 / 日」略小，让数字最醒目 */
+  font-size: .45em;
+  font-weight: 500;
+  letter-spacing: 0;
+  margin: 0 3px;
+}
+
+/* ---------- 引导语与副文案 ---------- */
+.lucky-open-meta { text-align: center; }
+.lucky-open-guide {                    /* 引导文案 */
+  margin: 0 0 12px;
+  font-size: 18px;
+  letter-spacing: .08em;
+  color: #333;
+}
+.lucky-open-sub {                      /* 副文案 */
+  margin: 0;
+  font-size: 14px;
+  letter-spacing: .04em;
+  color: #888;
+}
+
+/* ---------- 底部操作区 ---------- */
+.lucky-open-actions { width: 100%; }
+.lucky-open-btn {
+  width: 100%;
+  padding: 15px 0;
+  border: 0;
+  border-radius: 999px;                /* 胶囊形 */
+  background: #1A1C23;                 /* 深墨（可改为金色 #D4AF37） */
+  color: #FFFFFF;
+  font-family: inherit;
+  font-size: 15px;
+  letter-spacing: .16em;
+  cursor: pointer;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.lucky-open-btn:active,
+.lucky-open-btn.is-pressing { transform: scale(.97); }
+.lucky-open-btn[disabled] { opacity: .7; cursor: default; }
+.lucky-open-foot {
+  margin: 12px 0 0;
+  text-align: center;
+  font-size: 11px;
+  letter-spacing: .2em;
+  color: #b3ab9d;
+}
+
+/* ---------- 底部国风暗纹：水波纹 + 向上淡出 ---------- */
+.lucky-open-card::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 120px;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='64'%20height='32'%3E%3Cg%20fill='none'%20stroke='%2314110d'%20stroke-width='1.5'%3E%3Cpath%20d='M0%2012%20Q16%204%2032%2012%20T64%2012'/%3E%3Cpath%20d='M0%2022%20Q16%2014%2032%2022%20T64%2022'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: repeat-x;
+  background-position: bottom center;
+  background-size: 64px 32px;
+  opacity: .05;
+  -webkit-mask-image: linear-gradient(to top, #000, transparent);
+          mask-image: linear-gradient(to top, #000, transparent);
+}
+
+/* ---------- 响应式：移动端等比缩放 ---------- */
+@media (max-width: 480px) {
+  .lucky-open-card { min-height: 88%; padding: 22px 20px 26px; gap: 22px; }
+  .lucky-open-year { font-size: 12px; }
+  .lucky-open-date { font-size: 44px; letter-spacing: 1.5px; }
+  .lucky-open-figure { width: 92%; }
+  .lucky-open-guide { font-size: 17px; }
+}
+
+/* ---------- 降低动效 ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .lucky-open-card,
+  .lucky-open-card.is-in,
+  .lucky-open { transition: none; }
+  .lucky-open-card { opacity: 1; transform: none; }
+}

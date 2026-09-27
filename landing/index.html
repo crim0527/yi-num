@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title data-i18n="metaTitle">Yi-Num · 易卦定数，数见天命</title>
+<meta name="description" content="结合紫微斗数与易经八卦，探寻你与数字的微妙关系，点亮人生。" />
+<meta name="theme-color" content="#F3F1E5" />
+<link rel="icon" type="image/png" href="assets/logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body id="top">
+
+<div class="grain" aria-hidden="true"></div>
+<div class="halo" aria-hidden="true"></div>
+
+<!-- ============ Header ============ -->
+<header class="site-header" id="siteHeader">
+  <div class="shell header-inner">
+    <a class="brand" href="#top" data-i18n-aria="brandAria">
+      <span class="brand-mark"><img src="assets/logo.png" alt="" width="227" height="227" /></span>
+      <span class="brand-name">Yi-Num</span>
+    </a>
+
+    <div class="header-actions">
+      <!-- 语言切换 -->
+      <div class="lang" id="lang">
+        <button class="lang-btn" id="langBtn" type="button"
+                aria-haspopup="listbox" aria-expanded="false" aria-controls="langMenu"
+                data-i18n-aria="langAria">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M3 12h18" />
+            <path d="M12 3c2.5 2.5 3.8 5.6 3.8 9s-1.3 6.5-3.8 9c-2.5-2.5-3.8-5.6-3.8-9S9.5 5.5 12 3z" />
+          </svg>
+          <span id="langCurrent">简体中文</span>
+          <svg class="lang-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </button>
+
+        <ul class="lang-menu" id="langMenu" role="listbox" aria-labelledby="langBtn" hidden>
+          <li role="none">
+            <button class="lang-opt" type="button" role="option" data-lang="zh-CN" aria-selected="true">
+              <span>简体中文</span>
+              <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M20 6L9 17l-5-5" />
+              </svg>
+            </button>
+          </li>
+          <li role="none">
+            <button class="lang-opt" type="button" role="option" data-lang="en" aria-selected="false">
+              <span>English</span>
+              <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M20 6L9 17l-5-5" />
+              </svg>
+            </button>
+          </li>
+          <li role="none">
+            <button class="lang-opt" type="button" role="option" data-lang="id" aria-selected="false">
+              <span>Bahasa Indonesia</span>
+              <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M20 6L9 17l-5-5" />
+              </svg>
+            </button>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- ============ Hero ============ -->
+  <section class="hero shell">
+
+    <div class="hero-copy">
+      <p class="eyebrow reveal" style="--d:0ms">
+        <span class="pulse" aria-hidden="true"></span><span data-i18n="eyebrow">紫微斗数 · 易经八卦</span>
+      </p>
+
+      <h1 class="title reveal" style="--d:90ms" data-i18n="title">易卦定数，
+数见天命</h1>
+
+      <p class="subtitle reveal" style="--d:180ms" data-i18n="subtitle">
+        结合紫微斗数与易经八卦，探寻你与数字的微妙关系，点亮人生
+      </p>
+
+      <a class="cta reveal" id="experience" href="login.html" style="--d:270ms">
+        <span class="cta-label" data-i18n="cta">马上体验</span>
+        <svg class="cta-arrow" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+
+      <p class="slogan reveal" style="--d:360ms">
+        <span class="slogan-rule" aria-hidden="true"></span>
+        <span data-i18n="slogan">易卦定数，数见天命</span>
+        <em>Yi-Num</em>
+      </p>
+    </div>
+
+    <!-- ============ Visual showcase ============ -->
+    <div class="hero-visual reveal" id="chart" style="--d:150ms">
+      <figure class="chart-card">
+        <span class="corner tl" aria-hidden="true"></span>
+        <span class="corner tr" aria-hidden="true"></span>
+        <span class="corner bl" aria-hidden="true"></span>
+        <span class="corner br" aria-hidden="true"></span>
+
+        <svg class="luopan" viewBox="0 0 600 600" role="img" aria-label="融合八卦与紫微斗数星盘的罗盘图形">
+          <defs>
+            <radialGradient id="gAura" cx="50%" cy="50%" r="50%">
+              <stop offset="0%"   stop-color="#FFFFFF" stop-opacity=".85" />
+              <stop offset="62%"  stop-color="#FBF9F1" stop-opacity=".25" />
+              <stop offset="100%" stop-color="#F3F1E5" stop-opacity="0" />
+            </radialGradient>
+            <line id="tk"  x1="300" y1="23" x2="300" y2="37" />
+            <line id="tkL" x1="300" y1="23" x2="300" y2="48" />
+            <line id="sect" x1="300" y1="38" x2="300" y2="102" />
+            <line id="pal"  x1="300" y1="110" x2="300" y2="174" />
+          </defs>
+
+          <circle cx="300" cy="300" r="296" fill="url(#gAura)" />
+
+          <!-- outer rings -->
+          <circle class="ring r-16" cx="300" cy="300" r="286" />
+          <circle class="ring r-10" cx="300" cy="300" r="277" />
+
+          <!-- 24 solar ticks -->
+          <g class="ticks spin-slow">
+            <use href="#tkL" transform="rotate(0 300 300)" />
+            <use href="#tk"  transform="rotate(15 300 300)" />
+            <use href="#tk"  transform="rotate(30 300 300)" />
+            <use href="#tkL" transform="rotate(45 300 300)" />
+            <use href="#tk"  transform="rotate(60 300 300)" />
+            <use href="#tk"  transform="rotate(75 300 300)" />
+            <use href="#tkL" transform="rotate(90 300 300)" />
+            <use href="#tk"  transform="rotate(105 300 300)" />
+            <use href="#tk"  transform="rotate(120 300 300)" />
+            <use href="#tkL" transform="rotate(135 300 300)" />
+            <use href="#tk"  transform="rotate(150 300 300)" />
+            <use href="#tk"  transform="rotate(165 300 300)" />
+            <use href="#tkL" transform="rotate(180 300 300)" />
+            <use href="#tk"  transform="rotate(195 300 300)" />
+            <use href="#tk"  transform="rotate(210 300 300)" />
+            <use href="#tkL" transform="rotate(225 300 300)" />
+            <use href="#tk"  transform="rotate(240 300 300)" />
+            <use href="#tk"  transform="rotate(255 300 300)" />
+            <use href="#tkL" transform="rotate(270 300 300)" />
+            <use href="#tk"  transform="rotate(285 300 300)" />
+            <use href="#tk"  transform="rotate(300 300 300)" />
+            <use href="#tkL" transform="rotate(315 300 300)" />
+            <use href="#tk"  transform="rotate(330 300 300)" />
+            <use href="#tk"  transform="rotate(345 300 300)" />
+          </g>
+
+          <circle class="ring r-14" cx="300" cy="300" r="262" />
+
+          <!-- 八卦 sector dividers -->
+          <g class="r-08">
+            <use href="#sect" transform="rotate(22.5 300 300)" />
+            <use href="#sect" transform="rotate(67.5 300 300)" />
+            <use href="#sect" transform="rotate(112.5 300 300)" />
+            <use href="#sect" transform="rotate(157.5 300 300)" />
+            <use href="#sect" transform="rotate(202.5 300 300)" />
+            <use href="#sect" transform="rotate(247.5 300 300)" />
+            <use href="#sect" transform="rotate(292.5 300 300)" />
+            <use href="#sect" transform="rotate(337.5 300 300)" />
+          </g>
+
+          <!-- 八卦 -->
+          <g class="trigrams spin-slower">
+            <!-- 乾 -->
+            <g transform="rotate(0 300 300)"><g transform="translate(300 70)">
+              <rect x="-34" y="8.5" width="68" height="5" rx="1.5" />
+              <rect x="-34" y="-2.5" width="68" height="5" rx="1.5" />
+              <rect x="-34" y="-13.5" width="68" height="5" rx="1.5" />
+            </g></g>
+            <!-- 兑 -->
+            <g transform="rotate(45 300 300)"><g transform="translate(300 70)">
+              <rect x="-34" y="8.5" width="68" height="5" rx="1.5" />
+              <rect x="-34" y="-2.5" width="68" height="5" rx="1.5" />
+              <rect x="-34" y="-13.5" width="28" height="5" rx="1.5" /><rect x="6" y="-13.5" width="28" height="5" rx="1.5" />
+            </g></g>
+            <!-- 离 -->
+            <g transform="rotate(90 300 300)"><g transform="translate(300 70)">
+              <rect x="-34" y="8.5" width="68" height="5" rx="1.5" />
+              <rect x="-34" y="-2.5" width="28" height="5" rx="1.5" /><rect x="6" y="-2.5" width="28" height="5" rx="1.5" />
+              <rect x="-34" y="-13.5" width="68" height="5" rx="1.5" />
+            </g></g>
+            <!-- 震 -->
+            <g transform="rotate(135 300 300)"><g transform="translate(300 70)">
+              <rect x="-34" y="8.5" width="68" height="5" rx="1.5" />
+              <rect x="-34" y="-2.5" width="28" height="5" rx="1.5" /><rect x="6" y="-2.5" width="28" height="5" rx="1.5" />
+              <rect x="-34" y="-13.5" width="28" height="5" rx="1.5" /><rect x="6" y="-13.5" width="28" height="5" rx="1.5" />
+            </g></g>
+            <!-- 坤 -->
+            <g transform="rotate(180 300 300)"><g transform="translate(300 70)">
+              <rect x="-34" y="8.5" width="28" height="5" rx="1.5" /><rect x="6" y="8.5" width="28" height="5" rx="1.5" />
+              <rect x="-34" y="-2.5" width="28" height="5" rx="1.5" /><rect x="6" y="-2.5" width="28" height="5" rx="1.5" />
+              <rect x="-34" y="-13.5" width="28" height="5" rx="1.5" /><rect x="6" y="-13.5" width="28" height="5" rx="1.5" />
+            </g></g>
+            <!-- 艮 -->
+            <g transform="rotate(225 300 300)"><g transform="translate(300 70)">
+              <rect x="-34" y="8.5" width="28" height="5" rx="1.5" /><rect x="6" y="8.5" width="28" height="5" rx="1.5" />
+              <rect x="-34" y="-2.5" width="28" height="5" rx="1.5" /><rect x="6" y="-2.5" width="28" height="5" rx="1.5" />
+              <rect x="-34" y="-13.5" width="68" height="5" rx="1.5" />
+            </g></g>
+            <!-- 坎 -->
+            <g transform="rotate(270 300 300)"><g transform="translate(300 70)">
+              <rect x="-34" y="8.5" width="28" height="5" rx="1.5" /><rect x="6" y="8.5" width="28" height="5" rx="1.5" />
+              <rect x="-34" y="-2.5" width="68" height="5" rx="1.5" />
+              <rect x="-34" y="-13.5" width="28" height="5" rx="1.5" /><rect x="6" y="-13.5" width="28" height="5" rx="1.5" />
+            </g></g>
+            <!-- 巽 -->
+            <g transform="rotate(315 300 300)"><g transform="translate(300 70)">
+              <rect x="-34" y="8.5" width="28" height="5" rx="1.5" /><rect x="6" y="8.5" width="28" height="5" rx="1.5" />
+              <rect x="-34" y="-2.5" width="68" height="5" rx="1.5" />
+              <rect x="-34" y="-13.5" width="68" height="5" rx="1.5" />
+            </g></g>
+          </g>
+
+          <circle class="ring r-16" cx="300" cy="300" r="190" />
+
+          <!-- 紫微十二宫 -->
+          <g class="r-10">
+            <use href="#pal" transform="rotate(0 300 300)" />
+            <use href="#pal" transform="rotate(30 300 300)" />
+            <use href="#pal" transform="rotate(60 300 300)" />
+            <use href="#pal" transform="rotate(90 300 300)" />
+            <use href="#pal" transform="rotate(120 300 300)" />
+            <use href="#pal" transform="rotate(150 300 300)" />
+            <use href="#pal" transform="rotate(180 300 300)" />
+            <use href="#pal" transform="rotate(210 300 300)" />
+            <use href="#pal" transform="rotate(240 300 300)" />
+            <use href="#pal" transform="rotate(270 300 300)" />
+            <use href="#pal" transform="rotate(300 300 300)" />
+            <use href="#pal" transform="rotate(330 300 300)" />
+          </g>
+
+          <circle class="ring r-12" cx="300" cy="300" r="126" />
+
+          <!-- 星曜 -->
+          <g class="stars spin-rev">
+            <circle class="st st-gold" cx="334.9" cy="135.7" r="2.8" />
+            <circle class="st st-ink"  cx="411.5" cy="199.6" r="2.1" />
+            <circle class="st st-azure" cx="470.8" cy="257.4" r="3.1" />
+            <circle class="st st-ink"  cx="437.8" cy="334.3" r="2.0" />
+            <circle class="st st-gold" cx="409.3" cy="430.2" r="2.6" />
+            <circle class="st st-ink"  cx="330.8" cy="444.8" r="2.2" />
+            <circle class="st st-azure" cx="241.2" cy="461.6" r="2.9" />
+            <circle class="st st-ink"  cx="191.5" cy="397.7" r="2.1" />
+            <circle class="st st-gold" cx="127.3" cy="343.1" r="2.7" />
+            <circle class="st st-ink"  cx="164.2" cy="266.1" r="2.0" />
+            <circle class="st st-azure" cx="176.7" cy="188.9" r="3.0" />
+            <circle class="st st-gold" cx="248.0" cy="157.2" r="2.3" />
+          </g>
+
+          <circle class="ring r-08" cx="300" cy="300" r="118" />
+
+          <!-- 太极 -->
+          <g transform="translate(300 300)">
+            <circle r="62" fill="#FBF9F1" />
+            <circle class="ring r-14" r="62" />
+            <path class="yj" d="M0,-48 A48,48 0 0,1 0,48 A24,24 0 0,1 0,0 A24,24 0 0,0 0,-48 Z" />
+            <circle class="yj-dot-light" cx="0" cy="24" r="7" />
+            <circle class="yj-dot-dark"  cx="0" cy="-24" r="7" />
+          </g>
+        </svg>
+
+        <figcaption class="chart-caption">
+          <span>Zi Wei · Ba Gua</span>
+          <span class="caption-rule" aria-hidden="true"></span>
+          <span data-i18n="captionChart">紫微斗数命盘</span>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer" id="about">
+  <div class="shell footer-inner">
+    <div class="footer-left">
+      <p class="footer-slogan" data-i18n="footerSlogan">易卦定数，数见天命</p>
+      <a class="footer-about" href="about.html" target="_blank" rel="noopener" data-i18n="navAbout">关于我们</a>
+      <a class="footer-about" href="/admin/login">管理后台</a>
+    </div>
+    <p class="footer-meta" data-i18n="aboutCopyright">© 2026 YinumAI Limited. All rights reserved.</p>
+  </div>
+</footer>
+
+<script src="i18n.js"></script>
+<script src="auth.js"></script>
+<script src="main.js"></script>
+</body>
+</html>

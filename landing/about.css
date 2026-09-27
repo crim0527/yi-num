@@ -1,0 +1,327 @@
+/* =========================================================
+   关于我们页（AboutPage）
+   视觉语言与首页完全一致：
+   暖纸底 · 墨色粗体 · 金色点缀 · 纸感渐变卡片 · shell 对齐
+   ========================================================= */
+
+/* ---------- 内容容器：与首页 .shell 完全一致 ---------- */
+.ab-page {
+  position: relative;
+  z-index: 1;
+  max-width: var(--shell);
+  margin: 0 auto;
+  padding: clamp(1rem, 3vh, 1.8rem) clamp(20px, 5vw, 48px) clamp(2rem, 6vh, 3.6rem);
+}
+
+/* 当前页导航高亮（配合首页 .nav 下划线动效） */
+.nav a.is-active { color: var(--ink); }
+.nav a.is-active::after { transform: scaleX(1); }
+
+/* =========================================================
+   区块通用
+   ========================================================= */
+.ab-block { margin-top: clamp(2rem, 5vw, 4rem); }
+
+/* 小节标题：首页 slogan 母题（金色短横线 + 墨色粗体 + 大字距） */
+.ab-h2 {
+  display: flex;
+  align-items: center;
+  gap: .9rem;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: clamp(1.22rem, 3vw, 1.5rem);
+  letter-spacing: .14em;
+  color: var(--ink);
+  margin: 0 0 1.3rem;
+}
+.ab-h2::before {
+  content: "";
+  width: 34px;
+  height: 1px;
+  flex: none;
+  background: linear-gradient(90deg, var(--gold), transparent);
+}
+
+/* eyebrow：首页 .eyebrow 母题（金色圆点 + 拉开字距） */
+.ab-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+  font-size: .74rem;
+  letter-spacing: .34em;
+  color: var(--ink-mute);
+  margin: 0 0 1.1rem;
+}
+.ab-eyebrow::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex: none;
+  background: var(--gold-bright);
+  box-shadow: 0 0 0 0 rgba(201, 162, 39, .55);
+  animation: pulse 2.8s var(--ease) infinite;
+}
+
+.ab-h3 {
+  font-size: 1.02rem;
+  font-weight: 600;
+  letter-spacing: .1em;
+  color: var(--ink);
+  margin: 0 0 .6rem;
+}
+
+.ab-lead {
+  font-size: clamp(1rem, 1vw + .9rem, 1.12rem);
+  line-height: 2;
+  color: var(--ink-soft);
+  margin: 0;
+}
+.ab-body {
+  font-size: 1rem;
+  line-height: 2;
+  color: var(--ink-soft);
+  margin: 1.1rem 0 0;
+}
+.ab-body:first-of-type { margin-top: 0; }
+
+/* =========================================================
+   区块一：品牌头部（居中，同首页 hero-copy 的仪式感）
+   ========================================================= */
+.ab-hero {
+  max-width: 36rem;
+  margin-inline: auto;
+  text-align: center;
+  padding: clamp(.4rem, 1.5vh, 1rem) 0 clamp(.6rem, 2vh, 1.2rem);
+}
+.ab-logo {
+  width: 88px;
+  height: 88px;
+  margin: 0 auto .8rem;
+  display: block;
+  object-fit: contain;
+}
+.ab-brand {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(2.6rem, 8vw, 3.6rem);
+  letter-spacing: .14em;
+  line-height: 1.1;
+  color: var(--ink);
+  margin: 0;
+}
+
+/* =========================================================
+   区块三：Yi-Num 之名（纸感渐变卡，同首页 chart-card 材质）
+   ========================================================= */
+.ab-name {
+  margin-top: 1.8rem;
+  padding: 1.5rem 1.6rem;
+  background: linear-gradient(158deg, #FBF9F1 0%, #F0ECDE 100%);
+  border: 1px solid rgba(20, 20, 15, .07);
+  border-radius: 18px;
+  box-shadow: 0 30px 60px -50px rgba(20, 20, 15, .5),
+              inset 0 1px 0 rgba(255, 255, 255, .75);
+}
+.ab-name .ab-body { color: var(--ink-soft); }
+
+/* =========================================================
+   区块五：我们做什么（卡片 = 首页 chart-card 材质）
+   ========================================================= */
+.ab-cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.1rem;
+  margin-top: 1.6rem;
+}
+.ab-card {
+  background: linear-gradient(158deg, #FBF9F1 0%, #F0ECDE 100%);
+  border: 1px solid rgba(20, 20, 15, .07);
+  border-radius: 22px;
+  padding: 1.6rem 1.5rem;
+  box-shadow: 0 30px 60px -48px rgba(20, 20, 15, .5),
+              inset 0 1px 0 rgba(255, 255, 255, .75);
+  transition: transform .4s var(--ease), box-shadow .4s var(--ease),
+              border-color .4s var(--ease);
+}
+.ab-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(176, 141, 87, .35);
+  box-shadow: 0 40px 70px -48px rgba(20, 20, 15, .55),
+              inset 0 1px 0 rgba(255, 255, 255, .75);
+}
+.ab-card-ico {
+  display: inline-flex;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: rgba(176, 141, 87, .14);
+  color: var(--gold);
+  margin-bottom: 1rem;
+}
+.ab-card-ico svg { width: 22px; height: 22px; display: block; }
+.ab-card-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  color: var(--ink);
+  margin: 0 0 .5rem;
+}
+.ab-card-desc {
+  font-size: .92rem;
+  line-height: 1.85;
+  color: var(--ink-soft);
+  margin: 0;
+}
+@media (min-width: 760px) {
+  .ab-cards { grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+}
+
+/* =========================================================
+   区块六：使命与愿景（墨色卡片，同首页 CTA 的黑金气质）
+   ========================================================= */
+.ab-mission {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-top: clamp(2rem, 5vw, 4rem);
+  background: var(--ink);
+  color: #EDEAE0;
+  border-radius: 24px;
+  padding: clamp(1.8rem, 4vw, 2.8rem);
+  box-shadow: 0 40px 80px -56px rgba(20, 20, 15, .8);
+}
+.ab-mission .ab-h2 { color: #fff; }
+.ab-mission .ab-h2::before {
+  background: linear-gradient(90deg, var(--gold-bright), transparent);
+}
+.ab-mission-col { flex: 1 1 0; min-width: 0; }
+.ab-mission-body {
+  font-size: 1.02rem;
+  line-height: 1.9;
+  color: rgba(237, 234, 224, .82);
+  margin: .9rem 0 0;
+  overflow-wrap: anywhere;
+}
+.ab-mission-div {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .12), transparent);
+}
+@media (min-width: 760px) {
+  .ab-mission {
+    flex-direction: row;
+    align-items: stretch;
+    gap: 48px;
+  }
+  .ab-mission-div {
+    width: 1px;
+    align-self: stretch;
+    background: linear-gradient(180deg, transparent, rgba(201, 162, 39, .45), transparent);
+  }
+}
+
+/* =========================================================
+   区块七：价值观
+   ========================================================= */
+.ab-values { list-style: none; margin: 1.4rem 0 0; padding: 0; }
+.ab-value {
+  display: flex;
+  gap: 16px;
+  align-items: baseline;
+  padding-bottom: 24px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid rgba(20, 20, 15, .07);
+}
+.ab-value:last-child { border-bottom: 0; padding-bottom: 0; margin-bottom: 0; }
+.ab-value-k {
+  position: relative;
+  flex: none;
+  font-size: 1.02rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  color: var(--ink);
+  padding-left: 18px;
+  min-width: 5.5em;
+}
+.ab-value-k::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: .42em;
+  width: 8px;
+  height: 8px;
+  background: var(--gold);
+  border-radius: 2px;
+}
+.ab-value-d {
+  font-size: .95rem;
+  line-height: 1.85;
+  color: var(--ink-soft);
+  overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   区块八：边界与责任
+   ========================================================= */
+.ab-boundary {
+  margin: 1.4rem 0 0;
+  padding: 1.5rem 1.7rem;
+  background: var(--paper-2);
+  border: 1px solid rgba(20, 20, 15, .07);
+  border-left: 3px solid var(--gold);
+  border-radius: 0 18px 18px 0;
+  font-size: .96rem;
+  line-height: 1.95;
+  color: var(--ink-soft);
+}
+
+/* ---------- 移动端微调 ---------- */
+@media (max-width: 759px) {
+  .ab-page { padding-top: clamp(1.8rem, 5vh, 2.6rem); }
+  .ab-card { padding: 1.25rem 1.1rem; border-radius: 18px; }
+  .ab-name { padding: 1.25rem 1.2rem; }
+  .ab-boundary { padding: 1.25rem 1.2rem; font-size: .92rem; }
+  .ab-mission { border-radius: 18px; }
+  .ab-mission-body { font-size: .96rem; }
+  .ab-lead, .ab-body { font-size: .96rem; }
+  .ab-value { gap: 14px; }
+  .ab-value-k { min-width: 5em; }
+  .ab-value-d { font-size: .92rem; }
+}
+
+/* ---------- 手机窄屏（≤460px）：单列竖排，杜绝挤压 ---------- */
+@media (max-width: 460px) {
+  .ab-page { padding-inline: 18px; }
+
+  /* 品牌头部 */
+  .ab-logo { width: 72px; height: 72px; }
+  .ab-brand { font-size: 2.2rem; }
+
+  /* 价值观：关键词与释义改为上下两行，避免左右挤压 */
+  .ab-value {
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+  }
+  .ab-value-k { min-width: 0; }
+  .ab-value-d { flex: 1 1 100%; }
+
+  /* 卡片与引用块更紧凑 */
+  .ab-card { padding: 1.15rem 1rem; }
+  .ab-card-title { font-size: 1rem; }
+  .ab-card-desc { font-size: .9rem; }
+  .ab-name { padding: 1.15rem 1.05rem; }
+  .ab-boundary { padding: 1.15rem 1.05rem; border-radius: 0 14px 14px 0; }
+
+  /* 小节标题字距略收，防止换行难看 */
+  .ab-h2 { letter-spacing: .1em; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { animation: none; opacity: 1; transform: none; }
+  .ab-eyebrow::before { animation: none; }
+}

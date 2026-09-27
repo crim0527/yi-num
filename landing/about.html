@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title data-i18n="aboutMetaTitle">关于我们 · Yi-Num</title>
+<meta name="description" content="易数智能科技有限公司（YinumAI Limited）—— 以 AI 重新诠释东方智慧。" />
+<meta name="theme-color" content="#F3F1E5" />
+<link rel="icon" type="image/png" href="assets/logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="about.css" />
+</head>
+<body id="top">
+
+<div class="grain" aria-hidden="true"></div>
+<div class="halo" aria-hidden="true"></div>
+
+<!-- ============ Header（与首页完全一致的结构） ============ -->
+<header class="site-header" id="siteHeader">
+  <div class="shell header-inner">
+    <a class="brand" href="index.html" data-i18n-aria="brandAria">
+      <span class="brand-mark"><img src="assets/logo.png" alt="" width="227" height="227" /></span>
+      <span class="brand-name">Yi-Num</span>
+    </a>
+
+    <div class="header-actions">
+      <!-- 语言切换 -->
+      <div class="lang" id="lang">
+        <button class="lang-btn" id="langBtn" type="button"
+                aria-haspopup="listbox" aria-expanded="false" aria-controls="langMenu"
+                data-i18n-aria="langAria">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M3 12h18" />
+            <path d="M12 3c2.5 2.5 3.8 5.6 3.8 9s-1.3 6.5-3.8 9c-2.5-2.5-3.8-5.6-3.8-9S9.5 5.5 12 3z" />
+          </svg>
+          <span id="langCurrent">简体中文</span>
+          <svg class="lang-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </button>
+
+        <ul class="lang-menu" id="langMenu" role="listbox" aria-labelledby="langBtn" hidden>
+          <li role="none">
+            <button class="lang-opt" type="button" role="option" data-lang="zh-CN" aria-selected="true">
+              <span>简体中文</span>
+              <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M20 6L9 17l-5-5" />
+              </svg>
+            </button>
+          </li>
+          <li role="none">
+            <button class="lang-opt" type="button" role="option" data-lang="en" aria-selected="false">
+              <span>English</span>
+              <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M20 6L9 17l-5-5" />
+              </svg>
+            </button>
+          </li>
+          <li role="none">
+            <button class="lang-opt" type="button" role="option" data-lang="id" aria-selected="false">
+              <span>Bahasa Indonesia</span>
+              <svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M20 6L9 17l-5-5" />
+              </svg>
+            </button>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</header>
+
+<main class="ab-page" id="abPage">
+
+  <!-- 区块一：品牌头部 -->
+  <section class="ab-hero reveal" style="--d:0ms">
+    <img class="ab-logo" src="assets/logo.png" alt="Yi-Num" width="227" height="227" />
+    <h1 class="ab-brand">Yi-Num</h1>
+  </section>
+
+  <!-- 区块二：公司简介 -->
+  <section class="ab-block reveal" style="--d:100ms">
+    <h3 class="ab-h2" data-i18n="aboutIntroTitle">公司简介</h3>
+    <p class="ab-lead" data-i18n="aboutIntroBody">易数智能科技有限公司于 2026 年正式成立，是一家以人工智能为核心、以东方智慧为灵感的创新科技公司。我们推出核心品牌 Yi-Num，专注于探索《易经》象数文化、数字玄学与现代大型语言模型（LLM）技术的深度融合，帮助人们以更从容、更清晰、更智能的方式理解变化、面对选择、享受生活。</p>
+  </section>
+
+  <!-- 区块三：核心理念 -->
+  <section class="ab-block reveal" style="--d:160ms">
+    <h3 class="ab-h2" data-i18n="aboutBelieveTitle">我们相信</h3>
+    <p class="ab-body" data-i18n="aboutBelieveBody">科技不应只是冰冷的效率工具，也可以成为连接文化、心灵与日常生活的桥梁。易经所蕴含的阴阳变化、象数思维、周期观念与整体视角，为现代人提供了一种独特的思考框架；而大型语言模型则让这种古老智慧能够以自然语言交互、个性化解读和场景化陪伴的方式，走进普通人的日常生活。</p>
+    <div class="ab-name">
+      <h4 class="ab-h3" data-i18n="aboutNameTitle">Yi-Num 之名</h4>
+      <p class="ab-body" data-i18n="aboutNameBody">Yi 取自《易经》的“易”，也象征“一”——万物归一、变化中有恒常；Num 代表数字、数理与计算，象征现代科技对规律的探索。Yi-Num 不只是一个工具，更是一种“东方智慧 + AI”的生活方式助手。</p>
+    </div>
+  </section>
+
+  <!-- 区块四：我们为何出发 -->
+  <section class="ab-block reveal" style="--d:220ms">
+    <h3 class="ab-h2" data-i18n="aboutWhyTitle">我们为何出发</h3>
+    <p class="ab-body" data-i18n="aboutWhyBody">在快速变化的时代，人们面临越来越多选择：事业方向、关系沟通、生活节奏、情绪管理、自我认知……很多时候，人们需要的不是唯一答案，而是一个更全面的视角、一种更平静的心态、一套更有结构的思考方式。我们希望借助 AI 技术，把《易经》中关于变化的智慧，从晦涩的文本中释放出来，转化为现代人可理解、可体验、可日常使用的智能服务。</p>
+  </section>
+
+  <!-- 区块五：我们做什么 -->
+  <section class="ab-block reveal" style="--d:280ms">
+    <h3 class="ab-h2" data-i18n="aboutWhatTitle">我们做什么</h3>
+    <div class="ab-cards">
+      <article class="ab-card">
+        <span class="ab-card-ico"><svg viewBox="0 0 24 24"><g stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"><line x1="5" y1="6" x2="19" y2="6"/><line x1="5" y1="12" x2="14" y2="12"/><line x1="5" y1="18" x2="19" y2="18"/></g></svg></span>
+        <h4 class="ab-card-title" data-i18n="aboutCard1Title">易经文化数字化</h4>
+        <p class="ab-card-desc" data-i18n="aboutCard1Desc">将八卦、六十四卦、阴阳五行、象数理占等传统文化内容进行结构化、知识化整理。</p>
+      </article>
+      <article class="ab-card">
+        <span class="ab-card-ico"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-4 4V5z" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linejoin="round"/></svg></span>
+        <h4 class="ab-card-title" data-i18n="aboutCard2Title">智能问答与个性化解读</h4>
+        <p class="ab-card-desc" data-i18n="aboutCard2Desc">基于 LLM 技术，让用户以自然语言了解易经知识、卦象含义与变化逻辑。</p>
+      </article>
+      <article class="ab-card">
+        <span class="ab-card-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M12 7l3 10-3-4-3 4z" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linejoin="round"/></svg></span>
+        <h4 class="ab-card-title" data-i18n="aboutCard3Title">生活场景辅助</h4>
+        <p class="ab-card-desc" data-i18n="aboutCard3Desc">围绕自我认知、关系沟通、事业规划、情绪调适、生活节奏等场景，提供文化视角下的思考参考。</p>
+      </article>
+      <article class="ab-card">
+        <span class="ab-card-ico"><svg viewBox="0 0 24 24"><path d="M12 6c-2-1.6-5-1.6-7 0v12c2-1.6 5-1.6 7 0 2-1.6 5-1.6 7 0V6c-2-1.6-5-1.6-7 0z" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linejoin="round"/><line x1="12" y1="6" x2="12" y2="18" stroke="currentColor" stroke-width="1.6"/></svg></span>
+        <h4 class="ab-card-title" data-i18n="aboutCard4Title">文化内容与教育</h4>
+        <p class="ab-card-desc" data-i18n="aboutCard4Desc">通过文章、课程、互动体验等形式，推动易经文化的理性传播与现代表达。</p>
+      </article>
+      <article class="ab-card">
+        <span class="ab-card-ico"><svg viewBox="0 0 24 24"><path d="M9 8l-4 4 4 4M15 8l4 4-4 4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <h4 class="ab-card-title" data-i18n="aboutCard5Title">企业级与开发者服务</h4>
+        <p class="ab-card-desc" data-i18n="aboutCard5Desc">探索东方智慧知识库、AI 解读引擎、API 接口等能力，服务更多文化与商业场景。</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- 区块六：使命与愿景 -->
+  <section class="ab-mission reveal" style="--d:340ms">
+    <div class="ab-mission-col">
+      <h3 class="ab-h2" data-i18n="aboutMissionTitle">使命</h3>
+      <p class="ab-mission-body" data-i18n="aboutMissionBody">让东方智慧在 AI 时代被重新理解、被轻松使用、被更好传承。</p>
+    </div>
+    <span class="ab-mission-div" aria-hidden="true"></span>
+    <div class="ab-mission-col">
+      <h3 class="ab-h2" data-i18n="aboutVisionTitle">愿景</h3>
+      <p class="ab-mission-body" data-i18n="aboutVisionBody">成为全球领先的东方智慧 AI 平台，让每个人都能在变化的世界中，找到更从容的自己。</p>
+    </div>
+  </section>
+
+  <!-- 区块七：价值观 -->
+  <section class="ab-block reveal" style="--d:400ms">
+    <h3 class="ab-h2" data-i18n="aboutValuesTitle">我们的价值观</h3>
+    <ul class="ab-values">
+      <li class="ab-value"><span class="ab-value-k" data-i18n="aboutVal1K">守正创新</span><span class="ab-value-d" data-i18n="aboutVal1D">尊重传统文化本源，同时拥抱现代科技。</span></li>
+      <li class="ab-value"><span class="ab-value-k" data-i18n="aboutVal2K">科技向善</span><span class="ab-value-d" data-i18n="aboutVal2D">不制造焦虑，不渲染恐惧，不承诺宿命式结果。</span></li>
+      <li class="ab-value"><span class="ab-value-k" data-i18n="aboutVal3K">理性克制</span><span class="ab-value-d" data-i18n="aboutVal3D">将易经作为文化学习、自我觉察与生活参考，而非替代专业判断。</span></li>
+      <li class="ab-value"><span class="ab-value-k" data-i18n="aboutVal4K">隐私优先</span><span class="ab-value-d" data-i18n="aboutVal4D">重视用户数据安全与隐私保护。</span></li>
+      <li class="ab-value"><span class="ab-value-k" data-i18n="aboutVal5K">开放共创</span><span class="ab-value-d" data-i18n="aboutVal5D">与用户、研究者、文化机构和技术伙伴共同探索东方智慧的现代价值。</span></li>
+    </ul>
+  </section>
+
+  <!-- 区块八：边界与责任 -->
+  <section class="ab-block reveal" style="--d:460ms">
+    <h3 class="ab-h2" data-i18n="aboutBoundaryTitle">我们的边界与责任</h3>
+    <blockquote class="ab-boundary" data-i18n="aboutBoundaryBody">Yi-Num 提供的内容主要用于文化学习、娱乐参考、个人成长与生活启发，不构成医疗、法律、金融、婚姻等专业建议。我们反对迷信恐吓、过度承诺和诱导消费。我们希望用理性、温暖、负责任的方式，让易经文化在数字时代获得更健康、更持久的生命力。</blockquote>
+  </section>
+</main>
+
+<!-- ============ Footer（与首页一致） ============ -->
+<footer class="site-footer">
+  <div class="shell footer-inner">
+    <div class="footer-left">
+      <p class="footer-slogan" data-i18n="footerSlogan">易卦定数，数见天命</p>
+      <a class="footer-about" href="about.html" target="_blank" rel="noopener" data-i18n="navAbout">关于我们</a>
+      <a class="footer-about" href="/admin/login">管理后台</a>
+      <a class="footer-about" href="about-m.html">移动版</a>
+    </div>
+    <p class="footer-meta" data-i18n="aboutCopyright">© 2026 YinumAI Limited. All rights reserved.</p>
+  </div>
+</footer>
+
+<script src="i18n.js"></script>
+<script src="auth.js"></script>
+<script src="main.js"></script>
+<script>
+/* ---------- 移动端自动跳转移动版（about-m.html） ---------- */
+(function () {
+  'use strict';
+
+  var FLAG = 'yi-num:about-desktop';
+
+  /* 显式选择桌面版：写入偏好并停在本页 */
+  var params = new URLSearchParams(location.search);
+  if (params.get('view') === 'desktop') {
+    try { localStorage.setItem(FLAG, '1'); } catch (e) {}
+    params.delete('view');
+    var q = params.toString();
+    history.replaceState(null, '', location.pathname + (q ? '?' + q : '') + location.hash);
+    return;
+  }
+
+  if (params.get('view') === 'mobile') {
+    try { localStorage.removeItem(FLAG); } catch (e) {}
+    location.replace('about-m.html' + location.hash);
+    return;
+  }
+
+  try { if (localStorage.getItem(FLAG) === '1') return; } catch (e) {}
+
+  var ua = navigator.userAgent;
+  var isPhone = /Android|iPhone|iPod|Windows Phone|webOS|BlackBerry|HarmonyOS|Mobile/i.test(ua);
+  var isTablet = /iPad|Android|Macintosh/.test(ua) && navigator.maxTouchPoints > 1 && window.innerWidth >= 760;
+  var isNarrow = window.matchMedia('(max-width: 760px)').matches;
+
+  if (isPhone || isTablet || isNarrow) {
+    location.replace('about-m.html' + location.hash);
+  }
+})();
+</script>
+</body>
+</html>

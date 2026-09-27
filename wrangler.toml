@@ -1,0 +1,9 @@
+name = "yi-num"
+main = "worker/index.js"
+compatibility_date = "2024-09-23"
+
+# 静态资源：landing 目录由 Cloudflare 直接服务；
+# 未命中资产的请求才进入 Worker（用于 /api/deepseek）。
+[assets]
+directory = "./landing"
+binding = "ASSETS"

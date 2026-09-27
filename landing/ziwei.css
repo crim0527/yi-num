@@ -1,0 +1,427 @@
+/* =========================================================
+   Yi-Num · 紫微斗数（ZiWeiPage）
+   东方玄学 · 极简高级：黑白灰为主，紫色（#6B4E9B）与金色（#D4AF37）点缀
+   移动端：全宽纵向堆叠；PC 端：居中，维度卡片两列
+   ========================================================= */
+
+/* ---------- 页面容器 ---------- */
+.zw {
+  align-self: stretch;                 /* 覆盖 .app-main 的 align-items:center */
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 18px 20px;                  /* 左右留白，避免卡片贴屏边 */
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+/* ---------- 结果卡片列表容器：卡片之间留出间距（避免贴在一起） ---------- */
+.zw-results {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;                           /* 结果卡片之间的纵向间距 */
+}
+
+/* ---------- 卡片基类 ---------- */
+.zw-card {
+  position: relative;
+  padding: 22px 22px;
+  border-radius: 20px;
+  background: #FDFBF7;
+  border: 1px solid rgba(20, 20, 15, .06);
+  box-shadow: 0 16px 40px -26px rgba(52, 38, 20, .4);
+}
+/* 入场动画仅作用于结果卡：淡入 + 轻微上浮（延迟由 JS 设置 --d）
+   注意：发起算卦卡 / 提示卡不参与，否则会因初始 opacity:0 而不可见 */
+.zw-results .zw-card {
+  opacity: 0;
+  transform: translateY(12px);
+}
+/* 用 animation 而非 transition：加上 is-in 即自动播放，结束态由 fill-mode 保持 */
+.zw-results .zw-card.is-in {
+  animation: zwCardIn .5s ease var(--d, 0s) both;
+}
+@keyframes zwCardIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: none; }
+}
+.zw-card-title {
+  margin: 0 0 8px;
+  font-family: var(--font-display, "Songti SC", "STSong", serif);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: .18em;
+  color: #14110d;
+}
+.zw-card-text {
+  margin: 0;
+  font-family: "Songti SC", "STSong", "SimSun", serif;
+  font-size: 14px;
+  line-height: 2;
+  letter-spacing: .04em;
+  color: #5c574d;
+}
+
+/* ---------- 发起算卦 / 提示卡（居中长条卡） ---------- */
+.zw-center {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.zw-start {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 30px 24px 28px;
+  text-align: center;
+}
+.zw-date {
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: .26em;
+  color: #999;
+}
+.zw-title {
+  margin: 4px 0 0;
+  font-family: var(--font-display, "Songti SC", "STSong", serif);
+  font-size: 36px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  color: #14110d;
+}
+.zw-sub {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.8;
+  letter-spacing: .04em;
+  color: #888;
+}
+
+/* ---------- 按钮 ---------- */
+.zw-btn {
+  width: 100%;
+  margin-top: 6px;
+  padding: 15px 0;
+  border: 0;
+  border-radius: 999px;
+  background: #6B4E9B;                /* 紫色主按钮（可改 #1A1C23 深墨） */
+  color: #FFFFFF;
+  font-family: inherit;
+  font-size: 15px;
+  letter-spacing: .16em;
+  cursor: pointer;
+  transition: transform .15s ease, opacity .15s ease;
+}
+.zw-btn:active { transform: scale(.97); }
+.zw-btn[disabled] { opacity: .7; cursor: default; }
+.zw-btn-ghost {
+  background: transparent;
+  color: #6f685c;
+  border: 1px solid rgba(20, 20, 15, .14);
+  letter-spacing: .12em;
+}
+
+/* ---------- 结果：整体运势（深色卡） ---------- */
+.zw-overall {
+  background: #1A1C23;
+  border-color: transparent;
+}
+.zw-overall .zw-card-title { color: #FFFFFF; }
+.zw-overall .zw-card-text { color: rgba(255, 255, 255, .78); }
+.zw-overall::after {                  /* 右下角金色微光点缀 */
+  content: "";
+  position: absolute;
+  right: -30px; bottom: -40px;
+  width: 120px; height: 120px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(212, 175, 55, .22), transparent 70%);
+  pointer-events: none;
+}
+
+/* ---------- 结果：四维度（两列 / 堆叠） ---------- */
+.zw-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+}
+@media (min-width: 520px) {
+  .zw-grid { grid-template-columns: 1fr 1fr; }
+}
+.zw-item {
+  border-left: 3px solid #6B4E9B;     /* 紫色竖线 */
+  border-radius: 14px;
+  padding: 18px 20px;
+}
+.zw-item.is-gold { border-left-color: #D4AF37; }
+
+/* ---------- 结果：幸运色 & 幸运数字 ---------- */
+.zw-lucky {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+.zw-lucky-left { display: flex; align-items: center; gap: 12px; }
+.zw-swatch {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  border: 1px solid rgba(20, 20, 15, .14);
+  background: #6B4E9B;                /* 由 JS 按 luckyColor.hex 覆盖 */
+}
+.zw-color-name {
+  font-size: 14px;
+  letter-spacing: .1em;
+  color: #14110d;
+}
+/* 数字方框：与【命数】结果页数字方框一致（微软雅黑） */
+.zw-nums { display: flex; gap: 10px; }
+.zw-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px; height: 44px;
+  padding: 0 6px;
+  font-family: "Microsoft YaHei", "微软雅黑", sans-serif;
+  font-size: 18px;
+  color: #14110d;
+  background: #FFFFFF;
+  border: 1px solid rgba(20, 20, 15, .18);
+  border-radius: 10px;
+}
+
+/* ---------- 结果：宜 & 忌 ---------- */
+.zw-yiji {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.zw-yiji h4 {
+  margin: 0 0 10px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .2em;
+  color: #14110d;
+}
+.zw-list { margin: 0; padding: 0; list-style: none; }
+.zw-list li {
+  position: relative;
+  padding: 6px 0 6px 16px;
+  font-size: 14px;
+  letter-spacing: .06em;
+  color: #5c574d;
+}
+.zw-list li::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 50%;
+  width: 6px; height: 6px;
+  margin-top: -3px;
+  border-radius: 50%;
+}
+.zw-yi li::before { background: #B08B2E; }   /* 宜：金色 */
+.zw-ji li::before { background: #A33B2A; }   /* 忌：暗红 */
+
+/* ---------- 底部：重新推演 ---------- */
+.zw-footer { padding: 2px 0 8px; }
+
+/* ---------- 启动页卡片：星盘图 + 介绍 + 按钮 ---------- */
+.zw-launch {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px 20px 24px;
+  text-align: center;
+  animation: zwLaunchIn .5s ease both;   /* 上浮 20px + 淡入 */
+}
+@keyframes zwLaunchIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* 顶部占位图：4:3，圆角 16px，background-image 预留替换位 */
+.zw-figure {
+  --zw-img: url("assets/ziwei-star.jpg");   /* ← 替换为紫微星盘 / 星空 / 星官图即可 */
+  margin: 0;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  flex: none;
+  border-radius: 16px;
+  background-color: #EFECE4;                /* 浅米色兜底 */
+  background-image: var(--zw-img, none);
+  background-size: cover;
+  background-position: center;
+}
+
+/* 介绍文字（约 50 字，居中） */
+.zw-intro {
+  margin: 0;
+  font-family: "Songti SC", "STSong", "SimSun", serif;
+  font-size: 15px;
+  line-height: 2;
+  letter-spacing: .05em;
+  color: #5c574d;
+}
+
+/* ---------- 信息填写模态框（底部弹层） ---------- */
+.zw-modal-mask {
+  position: absolute;
+  top: var(--header-h, 60px);               /* 不遮挡导航栏 */
+  left: 0; right: 0; bottom: 0;
+  z-index: 150;
+  background: rgba(20, 16, 8, .35);
+  opacity: 0;
+  transition: opacity .28s ease;
+}
+.zw-modal-mask.show { opacity: 1; }
+.zw-modal-mask[hidden] { display: none; }
+
+.zw-modal {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  z-index: 155;
+  max-height: 82%;
+  overflow-y: auto;
+  background: #FDFBF7;
+  border-radius: 20px 20px 0 0;
+  box-shadow: 0 -20px 50px -20px rgba(45, 36, 18, .4);
+  transform: translateY(100%);
+  transition: transform .28s ease;
+}
+.zw-modal.open { transform: translateY(0); }
+.zw-modal[hidden] { display: none; }
+
+.zw-modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px 6px;
+}
+.zw-modal-cancel,
+.zw-modal-confirm {
+  background: none;
+  border: 0;
+  padding: .4rem .5rem;
+  font-size: 14px;
+  letter-spacing: .08em;
+  cursor: pointer;
+}
+.zw-modal-cancel { color: #6f685c; }
+.zw-modal-confirm { color: #6B4E9B; font-weight: 600; }
+.zw-modal-title {
+  font-family: var(--font-display, "Songti SC", serif);
+  font-size: 15px;
+  letter-spacing: .16em;
+  color: #14110d;
+}
+
+/* ---------- 表单 ---------- */
+.zw-form { padding: 8px 20px calc(22px + env(safe-area-inset-bottom, 0)); }
+.zw-label {
+  display: block;
+  margin: 14px 0 8px;
+  font-size: 13px;
+  letter-spacing: .14em;
+  color: #6f685c;
+}
+.zw-row { display: flex; gap: 10px; }
+.zw-select {
+  flex: 1;
+  min-width: 0;
+  padding: .7rem .7rem;
+  font-family: inherit;
+  font-size: .92rem;
+  color: #14110d;
+  background: #FFFFFF;
+  border: 1px solid rgba(20, 20, 15, .16);
+  border-radius: 12px;
+  appearance: none;
+  -webkit-appearance: none;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+.zw-select:focus {
+  outline: none;
+  border-color: #6B4E9B;
+  box-shadow: 0 0 0 3px rgba(107, 78, 155, .16);
+}
+.zw-select:disabled { background: #efece2; color: #9a948a; cursor: not-allowed; }
+
+.zw-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0 0;
+  font-size: 13px;
+  color: #6f685c;
+  cursor: pointer;
+}
+.zw-check input { accent-color: #6B4E9B; }
+
+.zw-gender { display: flex; gap: 10px; }
+.zw-radio {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 0;
+  background: #FFFFFF;
+  border: 1px solid rgba(20, 20, 15, .16);
+  border-radius: 12px;
+  font-size: 14px;
+  color: #14110d;
+  cursor: pointer;
+  transition: border-color .2s ease, background .2s ease;
+}
+.zw-radio input { accent-color: #6B4E9B; margin: 0; }
+.zw-radio:has(input:checked) {
+  border-color: #6B4E9B;
+  background: rgba(107, 78, 155, .08);
+}
+
+/* ---------- 加载层（紫色星盘旋转） ---------- */
+.zw-loading {
+  position: absolute;
+  top: var(--header-h, 60px);         /* 不遮挡导航栏 */
+  left: 0; right: 0; bottom: 0;
+  z-index: 140;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  background: rgba(255, 255, 255, .9);
+}
+.zw-loading[hidden] { display: none; }
+.zw-disc {
+  width: 56px; height: 56px;
+  object-fit: contain;
+  animation: zwSpin 1.2s linear infinite;
+}
+@keyframes zwSpin { to { transform: rotate(360deg); } }
+.zw-loading-text {
+  margin: 0;
+  font-size: .88rem;
+  letter-spacing: .16em;
+  color: #6f685c;
+}
+
+/* ---------- 响应式 ---------- */
+@media (max-width: 480px) {
+  .zw { padding: 14px 18px; }
+  .zw-title { font-size: 32px; }
+  .zw-card { padding: 20px 18px; }
+}
+
+/* ---------- 降低动效 ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .zw-results .zw-card,
+  .zw-results .zw-card.is-in { animation: none; opacity: 1; transform: none; }
+  .zw-launch { animation: none; opacity: 1; transform: none; }
+  .zw-disc { animation-duration: 2.6s; }
+}

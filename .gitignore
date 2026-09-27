@@ -19,7 +19,8 @@ _pkg2/
 _pkg3/
 _pkg4/
 _tmp_*/
-assets/            # 根目录 assets（非 landing 站点资源）
+# 根目录 assets（非 landing 站点资源）
+assets/
 _diag.sh
 _pack_ps.ps1
 _repack.ps1
@@ -73,6 +74,8 @@ node_modules/
 .windsurf/
 .workbuddy/
 backend_patch/
+README.md
+.dockerignore
 IFLOW.md
 project.config.json
 project.private.config.json

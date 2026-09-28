@@ -30,6 +30,7 @@
     codeError: null,    // i18n key
     sentTo: null,       // email 地址
     devCode: null,      // 开发模式回显的验证码
+    challenge: null,    // 服务端签发的 challenge（校验时回传）
     countdown: 0,
     timer: null
   };
@@ -86,10 +87,8 @@
   }
 
   /* ---------------- 模式判断 ---------------- */
-  /* Firebase 邮件链接模式：没有 6 位验证码，发送的是「登录链接」邮件 */
-  function isLinkMode() {
-    return !!(window.YiNumAuth && YiNumAuth.mode && YiNumAuth.mode() === 'firebase');
-  }
+  /* 当前为验证码模式（6 位码），无邮件链接模式，故恒为 false */
+  function isLinkMode() { return false; }
 
   /* 依据模式调整 UI（链接模式隐藏验证码输入框，主按钮改为“发送登录链接”） */
   function applyModeUI() {
@@ -125,21 +124,23 @@
     }, 1000);
   }
 
-  /* 发送登录链接（Firebase 模式）/ 验证码（开发模式） */
+  /* 发送邮箱验证码（线上走 /api/auth，本机开发模式本地回显） */
   function sendLoginLink() {
     if (!validateEmail()) { renderMessages(); email.focus(); return; }
     var addr = email.value.trim();
     sendBtn.disabled = true;
-    YiNumAuth.sendEmailCode(addr).then(function (devCode) {
+    YiNumAuth.sendEmailCode(addr).then(function (res) {
+      res = res || {};
       state.sentTo = addr;
-      state.devCode = devCode || null;
+      state.devCode = res.devCode || null;
+      state.challenge = res.challenge || null;
       renderMessages();
       startCountdown();
     }).catch(function (err) {
       sendBtn.disabled = false;
-      try { console.error('[Yi-Num Auth] send sign-in link failed:', err && (err.code || err.message) || err); } catch (e) {}
+      try { console.error('[Yi-Num Auth] send code failed:', err && (err.code || err.message) || err); } catch (e) {}
       var m = err && err.message;
-      state.emailError = (m === 'AUTH_NOT_CONFIGURED') ? 'errAuthNotConfigured' : 'errSendFailed';
+      state.emailError = (m === 'server_not_configured' || m === 'AUTH_NOT_CONFIGURED') ? 'errAuthNotConfigured' : 'errSendFailed';
       renderMessages();
     });
   }
@@ -175,7 +176,7 @@
 
     var account = email.value.trim();
 
-    YiNumAuth.verifyEmailCode(account, code.value.trim()).then(function () {
+    YiNumAuth.verifyEmailCode(account, code.value.trim(), state.challenge).then(function () {
       window.location.href = 'destiny.html';
     }).catch(function (err) {
       var m = err && err.message;
@@ -217,12 +218,9 @@
     });
   }
 
-  // 初始化认证客户端，并处理 Firebase 邮件链接登录回调
+  // 初始化认证客户端（邮件链接模式已移除，无需处理回调）
   if (window.YiNumAuth) {
     YiNumAuth.init();
     applyModeUI();
-    YiNumAuth.handleEmailLink(location.href).then(function (user) {
-      if (user) window.location.href = 'destiny.html';
-    }).catch(function () { /* 邮箱链接模式需先输入邮箱，忽略 */ });
   }
 })();

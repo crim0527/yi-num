@@ -5,7 +5,8 @@
  * - 非 /api/* 请求不会进入本脚本；
  * - /api/deepseek 由本脚本转发，逻辑复用 functions/api/deepseek.js。
  */
-import { onRequestPost, onRequestOptions } from '../functions/api/deepseek.js';
+import { onRequestPost as deepseekPost, onRequestOptions as deepseekOptions } from '../functions/api/deepseek.js';
+import { onRequestPost as authPost, onRequestOptions as authOptions } from '../functions/api/auth.js';
 
 export default {
   async fetch(request, env) {
@@ -13,10 +14,23 @@ export default {
 
     if (url.pathname === '/api/deepseek') {
       if (request.method === 'POST') {
-        return onRequestPost({ request, env });
+        return deepseekPost({ request, env });
       }
       if (request.method === 'OPTIONS') {
-        return onRequestOptions({ env });
+        return deepseekOptions({ env });
+      }
+      return new Response(JSON.stringify({ error: 'method_not_allowed' }), {
+        status: 405,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    if (url.pathname === '/api/auth') {
+      if (request.method === 'POST') {
+        return authPost({ request, env });
+      }
+      if (request.method === 'OPTIONS') {
+        return authOptions({ env });
       }
       return new Response(JSON.stringify({ error: 'method_not_allowed' }), {
         status: 405,

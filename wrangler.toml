@@ -7,3 +7,7 @@ compatibility_date = "2024-09-23"
 [assets]
 directory = "./landing"
 binding = "ASSETS"
+
+# 非敏感配置：发信地址（域名已在 Resend 完成验证）；API Key 仍走 Secret
+[vars]
+RESEND_FROM = "Yi-Num <no-reply@yinum.com>"

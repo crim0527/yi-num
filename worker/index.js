@@ -38,6 +38,12 @@ export default {
       });
     }
 
+    // 干净路由：/profile（/me）→ 静态资源 landing/profile.html
+    if (url.pathname === '/profile' || url.pathname === '/profile/' || url.pathname === '/me') {
+      const target = new URL('/profile.html', request.url);
+      return env.ASSETS.fetch(new Request(target, request));
+    }
+
     // 兜底：交给静态资源（一般到不了这里，assets 未命中才进 Worker）
     return env.ASSETS.fetch(request);
   }

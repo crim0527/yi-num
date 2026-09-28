@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title data-i18n="destinyTitle">命格数字 · Yi-Num</title>
-<meta name="description" content="请填写生辰八字，开启你的命格数字。" />
+<title data-i18n="profileMetaTitle">个人中心 · Yi-Num</title>
+<meta name="description" content="Yi-Num 个人中心：管理你的生辰资料、积分与每日打卡。" />
 <meta name="theme-color" content="#F3F1E5" />
 <link rel="icon" type="image/png" href="assets/logo.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -12,21 +12,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Ma+Shan+Zheng&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="styles.css" />
 <link rel="stylesheet" href="app.css" />
+<!-- 复用【命数】页的表单 / 滚轮套件，保证视觉与交互统一 -->
 <link rel="stylesheet" href="destiny.css" />
-<script src="user.js"></script>
-<script>
-  /* 页面绘制前判断：已有推演结果且非「编辑重推」→ 直接结果页，避免先渲染表单再跳转的闪烁 */
-  (function () {
-    var editing = /[?&]edit=1\b/.test(location.search);
-    if (editing) return;
-    var hasResult = false;
-    try {
-      var _acct = (window.YiNumUser && window.YiNumUser.getAccountId) ? window.YiNumUser.getAccountId() : 'anon';
-      hasResult = !!localStorage.getItem('yinum.destiny.result:' + _acct);
-    } catch (e) { hasResult = false; }
-    if (hasResult) location.replace('detail.html');
-  })();
-</script>
+<link rel="stylesheet" href="profile.css" />
 </head>
 <body>
 
@@ -35,7 +23,7 @@
 
 <div class="app" id="app">
 
-  <!-- ============ Header ============ -->
+  <!-- ============ Header（与命数页一致） ============ -->
   <header class="app-header">
     <button class="menu-btn" id="burger" type="button"
             aria-label="打开菜单" aria-expanded="false" aria-controls="drawer"
@@ -43,9 +31,8 @@
       <span></span><span></span><span></span>
     </button>
 
-    <h1 class="app-title" data-i18n="pageTitle">命格数字</h1>
+    <h1 class="app-title" data-i18n="profilePageTitle">个人中心</h1>
 
-    <!-- 语言切换（与首页一致） -->
     <div class="lang" id="lang">
       <button class="lang-btn" id="langBtn" type="button"
               aria-haspopup="listbox" aria-expanded="false" aria-controls="langMenu"
@@ -95,61 +82,174 @@
     </div>
   </header>
 
-  <!-- ============ 主体：基础信息输入 ============ -->
+  <!-- ============ 主体 ============ -->
   <main class="app-main">
-    <section class="form-wrap">
-      <form class="form-card" id="destinyForm" novalidate>
-        <h2 class="form-title" data-i18n="formTitle">请填写你的基础信息</h2>
-        <p class="form-sub" data-i18n="formSub">生辰八字是命理推演的基础，请尽可能准确填写。</p>
+    <div class="profile">
 
-        <div class="field">
-          <label class="field-label" data-i18n="labelBirth">出生年月日</label>
-          <div class="select-wrap">
-            <!-- 原生 select 仅作值容器（隐藏）；展示与交互统一走底部弹层滚轮 -->
-            <select class="select" id="birthYear" aria-label="年" hidden></select>
-            <select class="select" id="birthMonth" aria-label="月" hidden></select>
-            <select class="select" id="birthDay" aria-label="日" hidden></select>
-            <button type="button" class="select picker-trigger" id="dateTrigger"
-                    aria-haspopup="dialog" aria-label="出生年月日">
-              <span id="dateTriggerText">出生年月日</span>
-            </button>
+      <!-- ① 个人资料卡 -->
+      <section class="p-card p-card--profile reveal">
+        <button class="p-edit" id="editTrigger" type="button" data-i18n-aria="profileEditAria">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 20h4l10-10a2.8 2.8 0 0 0-4-4L4 16z" />
+            <path d="M13.5 6.5l4 4" />
+          </svg>
+          <span data-i18n="profileEdit">编辑</span>
+        </button>
+
+        <div class="p-id">
+          <button class="p-avatar" id="avatarBtn" type="button" data-i18n-aria="profileAvatarAria">
+            <span class="p-avatar-text" id="avatarText">易</span>
+            <span class="p-avatar-badge" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                   stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 8h3l1.5-2h7L17 8h3v11H4z" />
+                <circle cx="12" cy="13" r="3.2" />
+              </svg>
+            </span>
+          </button>
+
+          <div class="p-id-meta">
+            <p class="p-nick" id="nickText">昵称</p>
+            <p class="p-mail" id="mailText">user@example.com</p>
           </div>
         </div>
 
-        <div class="field">
-          <label class="field-label" data-i18n="labelTime">出生时间</label>
-          <div class="select-wrap">
-            <select class="select" id="birthHour" aria-label="时辰" hidden></select>
-            <button type="button" class="select picker-trigger" id="hourTrigger"
-                    aria-haspopup="dialog" aria-label="时辰">
-              <span id="hourTriggerText">时辰</span>
-            </button>
+        <div class="p-facts">
+          <button class="p-fact" type="button" data-edit-field="birth">
+            <span class="p-fact-k" data-i18n="labelBirth">出生年月日</span>
+            <span class="p-fact-v" id="factBirth">未填写，点击完善</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M9 6l6 6-6 6" />
+            </svg>
+          </button>
+
+          <button class="p-fact" type="button" data-edit-field="time">
+            <span class="p-fact-k" data-i18n="labelTime">出生时间</span>
+            <span class="p-fact-v" id="factTime">未填写，点击完善</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M9 6l6 6-6 6" />
+            </svg>
+          </button>
+
+          <button class="p-fact" type="button" data-edit-field="gender">
+            <span class="p-fact-k" data-i18n="labelGender">性别</span>
+            <span class="p-fact-v" id="factGender">未填写，点击完善</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M9 6l6 6-6 6" />
+            </svg>
+          </button>
+        </div>
+      </section>
+
+      <!-- ② 积分卡 -->
+      <section class="p-card p-card--points reveal">
+        <div class="p-points-head">
+          <div class="p-points-meta">
+            <p class="p-points-k" data-i18n="profilePoints">我的积分</p>
+            <p class="p-points-v">
+              <span id="pointsNum">0</span><span class="p-points-unit" data-i18n="profilePointsUnit">分</span>
+            </p>
           </div>
-          <label class="switch">
-            <input type="checkbox" id="unknownTime" />
-            <span class="switch-track" aria-hidden="true"><span class="switch-thumb"></span></span>
-            <span class="switch-text" data-i18n="unknownTime">不清楚具体时间</span>
-          </label>
+
+          <button class="p-ghost" id="historyBtn" type="button" data-i18n-aria="profileHistoryAria">
+            <span data-i18n="profileHistory">积分记录</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M9 6l6 6-6 6" />
+            </svg>
+          </button>
         </div>
 
-        <div class="field">
-          <label class="field-label" data-i18n="labelGender">性别</label>
-          <div class="select-wrap">
-            <select class="select" id="birthGender" aria-label="性别" hidden></select>
-            <button type="button" class="select picker-trigger" id="genderTrigger"
-                    aria-haspopup="dialog" aria-label="性别">
-              <span id="genderTriggerText">请选择</span>
-            </button>
-          </div>
-        </div>
+        <div class="p-week" id="weekStrip" role="group" aria-label="打卡"></div>
 
-        <p class="form-error" id="formError" role="alert" hidden></p>
-        <button class="btn-submit" type="submit" data-i18n="seal">开启命格数字</button>
-      </form>
-    </section>
+        <button class="p-checkin" id="checkinBtn" type="button" data-i18n="profileCheckin">今日打卡</button>
+      </section>
+
+      <!-- ③ 退出登录 -->
+      <button class="p-signout" id="signoutBtn" type="button" data-i18n="profileSignOut">退出登录</button>
+
+    </div>
   </main>
 
-  <!-- 通用底部弹层滚轮（出生年月日 / 出生时间 / 性别 共用） -->
+  <!-- ============ 弹层遮罩 ============ -->
+  <div class="picker-mask" id="sheetMask" hidden></div>
+
+  <!-- ============ 编辑资料弹层 ============ -->
+  <div class="picker-sheet p-sheet" id="editSheet" role="dialog" aria-modal="true"
+       aria-labelledby="editTitle" hidden>
+    <div class="picker-head">
+      <button type="button" class="picker-cancel" id="editCancel" data-i18n="pickerCancel">取消</button>
+      <span class="picker-title" id="editTitle" data-i18n="profileEditTitle">编辑资料</span>
+      <span class="picker-head-space" aria-hidden="true"></span>
+    </div>
+
+    <div class="p-sheet-body">
+      <p class="p-sheet-note" data-i18n="profileEditSub">保存后同步至【命格数字】，命理结果需重新推演。</p>
+
+      <div class="p-field">
+        <span class="p-field-label" data-i18n="labelBirth">出生年月日</span>
+        <div class="select-wrap">
+          <select class="select" id="editYear" aria-label="年" hidden></select>
+          <select class="select" id="editMonth" aria-label="月" hidden></select>
+          <select class="select" id="editDay" aria-label="日" hidden></select>
+          <button type="button" class="select picker-trigger" id="dateTrigger"
+                  aria-haspopup="dialog">
+            <span id="dateTriggerText">出生年月日</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="p-field">
+        <span class="p-field-label" data-i18n="labelTime">出生时间</span>
+        <div class="select-wrap">
+          <select class="select" id="editHour" aria-label="时辰" hidden></select>
+          <button type="button" class="select picker-trigger" id="hourTrigger"
+                  aria-haspopup="dialog">
+            <span id="hourTriggerText">时辰</span>
+          </button>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="unknownTime" />
+          <span class="switch-track" aria-hidden="true"><span class="switch-thumb"></span></span>
+          <span class="switch-text" data-i18n="unknownTime">不清楚具体时间</span>
+        </label>
+      </div>
+
+      <div class="p-field">
+        <span class="p-field-label" data-i18n="labelGender">性别</span>
+        <div class="select-wrap">
+          <select class="select" id="editGender" aria-label="性别" hidden></select>
+          <button type="button" class="select picker-trigger" id="genderTrigger"
+                  aria-haspopup="dialog">
+            <span id="genderTriggerText">请选择</span>
+          </button>
+        </div>
+      </div>
+
+      <p class="form-error" id="editError" role="alert" hidden></p>
+      <button class="btn-submit" id="editSave" type="button" data-i18n="profileSave">保存</button>
+    </div>
+  </div>
+
+  <!-- ============ 积分记录弹层 ============ -->
+  <div class="picker-sheet p-sheet" id="historySheet" role="dialog" aria-modal="true"
+       aria-labelledby="historyTitle" hidden>
+    <div class="picker-head">
+      <button type="button" class="picker-cancel" id="historyCancel" data-i18n="pickerCancel">取消</button>
+      <span class="picker-title" id="historyTitle" data-i18n="profileHistory">积分记录</span>
+      <span class="picker-head-space" aria-hidden="true"></span>
+    </div>
+    <div class="p-sheet-body">
+      <ul class="p-history" id="historyList"></ul>
+      <p class="p-empty-box" id="historyEmpty" hidden data-i18n="profileHistoryEmpty">暂无记录</p>
+    </div>
+  </div>
+
+  <!-- ============ 滚轮选择器（与命数页同款，置于弹层之上） ============ -->
   <div class="picker-mask" id="pickerMask" hidden></div>
   <div class="picker-sheet" id="pickerSheet" role="dialog" aria-modal="true" aria-label="请选择" hidden>
     <div class="picker-head">
@@ -162,12 +262,6 @@
       <div class="picker-cols" id="pickerCols"></div>
       <div class="picker-indicator" aria-hidden="true"></div>
     </div>
-  </div>
-
-  <!-- 推演加载层 -->
-  <div class="derive" id="derive" hidden aria-live="polite">
-    <img class="taiji" src="assets/logo.png" alt="" aria-hidden="true" />
-    <p class="derive-text" data-i18n="deriving">推演中…</p>
   </div>
 
   <!-- ============ 抽屉菜单 ============ -->
@@ -197,7 +291,7 @@
         </svg>
         <span data-i18n="navHome">首页</span>
       </a>
-      <a class="drawer-item is-active" href="destiny.html" aria-current="page">
+      <a class="drawer-item" href="destiny.html">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <circle cx="12" cy="12" r="9" />
@@ -237,7 +331,7 @@
           <path d="M5.5 13.5h13" />
           <path d="M7.5 13.5v2.8A3.2 3.2 0 0 0 10.7 19.5h2.6a3.2 3.2 0 0 0 3.2-3.2v-2.8" />
         </svg>
-        <span data-i18n="navOffering">供奉</span>
+        <span data-i18n="navOffering">每日供奉</span>
       </a>
       <a class="drawer-item" href="about.html">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
@@ -269,8 +363,9 @@
 
 <script src="config.js"></script>
 <script src="i18n.js"></script>
-<script src="destiny-api.js"></script>
-<script src="destiny.js"></script>
+<script src="user.js"></script>
+<script src="auth.js"></script>
+<script src="profile.js"></script>
 <script src="drawer-user.js"></script>
 </body>
 </html>
